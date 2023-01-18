@@ -47,7 +47,6 @@ ScoreHandler::ScoreHandler(string filename){
     vector < vector <string> > scoreStrings;
     double div = 0;
     length = 0;
-    int beat = 0;
     for (int i = synthEnd; i < lines.size(); i++){
         if (lines[i].length() > 0) {
             // scoreStrings.push_back(splitStringOnSpace(lines[i]));
@@ -55,7 +54,7 @@ ScoreHandler::ScoreHandler(string filename){
             if (temp[0].find("DIV") != -1) {
               div = stoi(temp[1]);
             } else if (temp[0].find("REST") != -1) {
-                beat += 1;
+                length += 1;
             } else {
                 int inst = 0;
                 for (vector <string>::iterator i = begin(temp); i != end(temp); ++ i) {
@@ -63,13 +62,12 @@ ScoreHandler::ScoreHandler(string filename){
                         inst += 1;
                     } else {
                         if (notes.count(string(*i))>= 1) {
-                            score.push_back(noteEvent(notes[string(*i)], beat, div, inst));
+                            score.push_back(noteEvent(notes[string(*i)], length, div, inst));
                         }
                     }
                 }
-                beat += 1;
+                length += 1;
             }
-            length += 4 / div;
             
         }
     }

@@ -7,7 +7,13 @@ void Timeline::setBPM(double b) {
 }
 
 void Timeline::addBeats(vector<int> & b, int count) {
-    for (int i = 0; i < count * beatInSamples; i++) {
+    for (int i = 0; i <= count * beatInSamples; i++) {
+        b.push_back(0);
+    }
+}
+
+void Timeline::addSilence(vector<int> & b, double dur) {
+    for (int i = 0; i <= dur * sampleRate; i++) {
         b.push_back(0);
     }
 }

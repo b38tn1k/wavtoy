@@ -8,7 +8,9 @@ AddSynth::AddSynth(double a, double d, double amp, double dur, int sR, double fG
     sampleRate = sR;
     attackInSamples = duration * attack * sR;
     attackIncrement = 1.0/attackInSamples;
-    decayIncrement = 1.0/((sR * duration) - attackInSamples);
+    decayInSamples = duration * decay * sR;
+    decayIncrement = 1.0/decayInSamples;
+    decayInSamples = (duration * sR) - decayInSamples;
     fundamentalGain = fG;
     harmonicBalance = hB;
     harmonicCount = hC;
@@ -44,7 +46,7 @@ vector <int> AddSynth::synthesise(double frequency){
         // env
         if (n < attackInSamples) {
             env += attackIncrement;
-        } else {
+        } else if (n > decayInSamples) {
             env -= decayIncrement;
         }
         //amp
@@ -57,15 +59,7 @@ vector <int> AddSynth::synthesise(double frequency){
 
 void AddSynth::addNote(vector<int> & b, int index, double frequency){
     vector <int> tempBuffer = synthesise(frequency);
-    //make sure note fits, makes space
-
-    
-    int remainingSpace = b.size() - index;
-    if (remainingSpace < tempBuffer.size() || index > b.size()){
-        for (int i = 0; i < tempBuffer.size(); i++) {
-            b.push_back(0);
-        }
-    }
+    // assume note fits
     // sum note into buffer;
     for(vector<int>::iterator it = begin(tempBuffer); it != end(tempBuffer); ++it){
         b[index] += *it;

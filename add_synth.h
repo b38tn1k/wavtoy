@@ -27,6 +27,7 @@ class AddSynth {
         double attackInSamples;
         double attackIncrement;
         double decayIncrement;
+        double decayInSamples;
         double fundamentalGain;
         double harmonicBalance;
         int harmonicCount;

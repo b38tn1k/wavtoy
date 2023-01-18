@@ -11,6 +11,7 @@ class Timeline {
     public:
         void setBPM(double b);
         void addBeats(vector<int> & b, int count);
+        void addSilence(vector<int> & b, double dur);
         int getSampleIndexFromCursor(u_int beatSubDivision, u_int multiples);
         int cursor;
         Timeline(int sR) {

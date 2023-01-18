@@ -11,12 +11,6 @@
 
 using namespace std;
 
-void addSilence(vector<int> & b, double d, int sR){
-    for (int i = 0; i < 2 * d * sR; i++){
-        b.push_back(0);
-    }
-}
-
 void echo(vector<int> & b, double decay, double time) {
     double invDecay = 1.0 - decay;
     for(vector<int>::iterator it = begin(b); it != end(b); ++it){
@@ -25,13 +19,6 @@ void echo(vector<int> & b, double decay, double time) {
         }
     }
 }
-
-struct nE {
-    double frequency;
-    u_int beatIndex;
-    u_int beatDivision;
-    nE(double f, int bI, int bD) : frequency(f), beatIndex(bI), beatDivision(bD) {}
-};
 
 int main(int argc, char *argv[]){
     if (argc < 2) {
@@ -57,18 +44,18 @@ int main(int argc, char *argv[]){
     }
     vector<int> buffer;
     test.openWav();
-    seq.addBeats(buffer, score.length * maxDuration);
+    seq.addBeats(buffer, score.length);
+    seq.addSilence(buffer, maxDuration);
 
     for (vector<noteEvent>::iterator i = begin(score.score); i != end(score.score); ++i){
-        cout << "new note: index\t"<< i->beatIndex << endl;
-        cout << "inst\t" << i->instrument << endl;
-        cout << "div\t" << i->beatDivision << endl;
-        cout << "freq\t" << i->frequency << endl;
         int index = seq.getSampleIndexFromCursor(i->beatDivision, i->beatIndex);
-        cout << "index\t" << index << endl;
-        cout << "buffer size\t" << buffer.size() << endl;
-        
         instruments[i->instrument].addNote(buffer, index, i->frequency);
+        // cout << "new note: index\t"<< i->beatIndex << endl;
+        // cout << "inst\t" << i->instrument << endl;
+        // cout << "div\t" << i->beatDivision << endl;
+        // cout << "freq\t" << i->frequency << endl;
+        // cout << "index\t" << index << endl;
+        // cout << "buffer size\t" << buffer.size() << endl;
     }
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
 
