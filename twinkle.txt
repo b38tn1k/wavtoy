@@ -1,0 +1,25 @@
+Twinkle Twinkle
+140
+
+SYNTH 0.1 0.3 0.1 0.2 0.5 0.2 12
+SYNTH 0.4 0.4 0.1 1.5 0.5 0.7 2
+
+DIV 4
+C4  | C4 E4 G4
+C4
+G4  | G4 B4 D4
+G4
+A4  | A4 C4 E4
+A4
+G4  | G4 B4 D4
+REST
+F4  | F4 A4 C4
+F4
+E4  | E4 G4 B4
+E4
+D4  | D4 F4 A4
+D4
+C4  | C4 E4 G4
+
+
+
