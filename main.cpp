@@ -55,9 +55,7 @@ int main(int argc, char *argv[]){
             maxDuration = stof(temp[4]); 
         }
     }
-    // up to here
     vector<int> buffer;
-
     test.openWav();
     seq.addBeats(buffer, score.length * maxDuration);
 
