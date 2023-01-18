@@ -7,7 +7,6 @@
 #include <vector>
 #include <map>
 #include "frequencies.h"
-#include "add_synth.h"
 
 using namespace std;
 

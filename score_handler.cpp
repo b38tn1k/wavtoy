@@ -1,6 +1,5 @@
 #include "score_handler.h"
 #include "frequencies.h"
-#include "add_synth.h"
 
 vector<string> splitStringOnSpace(string str){
     vector<string> res;

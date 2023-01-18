@@ -1,5 +1,5 @@
-#ifndef ADD_SYNTH_H
-#define ADD_SYNTH_H
+#ifndef SYNTH_H
+#define SYNTH_H
 
 #include <cmath>
 #include <fstream>
@@ -12,14 +12,15 @@ using namespace std;
 #define TWO_PI 6.283185307179586476925286766559
 #define MAX_AMP 32760
 
-class AddSynth {
+class Synth {
     public:
-        AddSynth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC);
+        Synth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC, int m);
         void addNote(vector<int> & b, int index, double frequency);
         vector <int> synthesise(double frequency);
         void setTimbre(double fG, double hB, int hC);
     private:
         u_int sampleRate;
+        u_int mode;
         double attack;
         double decay;
         double amplitude;
@@ -31,6 +32,8 @@ class AddSynth {
         double fundamentalGain;
         double harmonicBalance;
         int harmonicCount;
+        double additiveOsc(int n, double frequency);
+        double noiseOsc(int n, double frequency);
 
 };
 

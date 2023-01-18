@@ -6,7 +6,7 @@
 #include "frequencies.h"
 #include "wav_handler.h"
 #include "timeline.h"
-#include "add_synth.h"
+#include "synth.h"
 #include "score_handler.h"
 
 using namespace std;
@@ -34,10 +34,10 @@ int main(int argc, char *argv[]){
     cout << score.bpm <<" BPM" << endl;
     // make synths
     double maxDuration = 0;
-    vector <AddSynth> instruments;
+    vector <Synth> instruments;
     for (vector < vector <string> >::iterator i = begin(score.instrumentStrings); i != end(score.instrumentStrings); ++i){
         vector<string> temp = *i;
-        instruments.push_back(AddSynth(stof(temp[1]), stof(temp[2]), stof(temp[3]), stof(temp[4]), test.sampleRate, stof(temp[5]), stof(temp[6]), stoi(temp[7])));
+        instruments.push_back(Synth(stof(temp[1]), stof(temp[2]), stof(temp[3]), stof(temp[4]), test.sampleRate, stof(temp[5]), stof(temp[6]), stoi(temp[7]), stoi(temp[8])));
         if (stof(temp[4]) > maxDuration) {
             maxDuration = stof(temp[4]); 
         }
