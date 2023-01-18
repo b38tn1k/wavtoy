@@ -44,11 +44,12 @@ int main(int argc, char *argv[]){
     }
     vector<int> buffer;
     test.openWav();
-    seq.addBeats(buffer, score.length);
+    seq.addBeats(buffer, ceil(score.length));
+    cout << score.length << endl;
     seq.addSilence(buffer, maxDuration);
 
     for (vector<noteEvent>::iterator i = begin(score.score); i != end(score.score); ++i){
-        int index = seq.getSampleIndexFromCursor(i->beatDivision, i->beatIndex);
+        int index = seq.getSampleIndexFromCursor(4, i->beatIndex);
         instruments[i->instrument].addNote(buffer, index, i->frequency);
         // cout << "new note: index\t"<< i->beatIndex << endl;
         // cout << "inst\t" << i->instrument << endl;

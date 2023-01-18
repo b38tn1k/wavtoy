@@ -13,10 +13,10 @@ using namespace std;
 
 struct noteEvent {
     double frequency;
-    u_int beatIndex;
+    double beatIndex;
     u_int beatDivision;
     u_int instrument;
-    noteEvent(double f, int bI, int bD, int inst) : frequency(f), beatIndex(bI), beatDivision(bD), instrument(inst) {}
+    noteEvent(double f, double bI, int bD, int inst) : frequency(f), beatIndex(bI), beatDivision(bD), instrument(inst) {}
 };
 
 class ScoreHandler {

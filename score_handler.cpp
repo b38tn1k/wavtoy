@@ -52,9 +52,9 @@ ScoreHandler::ScoreHandler(string filename){
             // scoreStrings.push_back(splitStringOnSpace(lines[i]));
             vector <string> temp = splitStringOnSpace(lines[i]);
             if (temp[0].find("DIV") != -1) {
-              div = stoi(temp[1]);
+              div = stof(temp[1]);
             } else if (temp[0].find("REST") != -1) {
-                length += 1;
+                length += (4.0/div);
             } else {
                 int inst = 0;
                 for (vector <string>::iterator i = begin(temp); i != end(temp); ++ i) {
@@ -66,7 +66,7 @@ ScoreHandler::ScoreHandler(string filename){
                         }
                     }
                 }
-                length += 1;
+                length += (4.0/div);
             }
             
         }

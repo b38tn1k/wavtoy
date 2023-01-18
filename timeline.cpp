@@ -18,7 +18,7 @@ void Timeline::addSilence(vector<int> & b, double dur) {
     }
 }
 
-int Timeline::getSampleIndexFromCursor(u_int beatSubDivision, u_int multiples=1) {
+int Timeline::getSampleIndexFromCursor(u_int beatSubDivision, double multiples=1) {
     int offset = (int)((measureInSamples / beatSubDivision) * multiples);
     return cursor + offset;
 }
