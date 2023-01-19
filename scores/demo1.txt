@@ -1,4 +1,4 @@
-test
+Wavtoy Theme
 120
 
 # Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count, Mode
@@ -363,6 +363,8 @@ DIV 16
     |   | C3
     |   | C3
 DIV 3
+    |   | C3
+    |   | C3
     |   | C3
     |   | C3
     |   | C3

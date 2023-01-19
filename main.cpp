@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "frequencies.h"
-#include "wav_handler.h"
-#include "timeline.h"
-#include "synth.h"
-#include "score_handler.h"
+#include "include/frequencies.h"
+#include "include/wav_handler.h"
+#include "include/timeline.h"
+#include "include/synth.h"
+#include "include/score_handler.h"
 
 using namespace std;
 
@@ -58,6 +58,7 @@ int main(int argc, char *argv[]){
         // cout << "index\t" << index << endl;
         // cout << "buffer size\t" << buffer.size() << endl;
     }
+    // echo(buffer, 0.3, 0.5 * test.sampleRate); 
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
 
     test.writeBuffer(buffer);

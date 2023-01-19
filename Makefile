@@ -1,19 +1,26 @@
 CC = g++
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g 
+TARGET = wavtoy 
+OBJFILES = main.o wav_handler.o timeline.o synth.o score_handler.o
+OBJS = include/frequencies.h wav_handler.o timeline.o synth.o score_handler.o
 
-soundtoy: main.o wav_handler.o timeline.o synth.o score_handler.o
-	$(CC) $(CFLAGS) -o soundtoy main.o wav_handler.o timeline.o synth.o score_handler.o
+$(TARGET): $(OBJFILES)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES)
 
-main.o: main.cpp frequencies.h wav_handler.h timeline.h synth.h score_handler.h
+main.o: main.cpp  $(OBJS)
 	$(CC) $(CFLAGS) -c main.cpp
 
-wav_handler.o: wav_handler.h
+wav_handler.o: include/wav_handler.h
+	$(CC) $(CFLAGS) -c include/wav_handler.cpp
 
-timeline.o: timeline.h
+timeline.o: include/timeline.h
+	$(CC) $(CFLAGS) -c include/timeline.cpp
 
-synth.o: synth.h
+synth.o: include/synth.h
+	$(CC) $(CFLAGS) -c include/synth.cpp
 
-score_handler.o: score_handler.h
+score_handler.o: include/score_handler.h
+	$(CC) $(CFLAGS) -c include/score_handler.cpp
 
 clean:
 	rm -rf *.o
