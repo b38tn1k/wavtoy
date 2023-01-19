@@ -59,9 +59,9 @@ int main(int argc, char *argv[]){
         // cout << "buffer size\t" << buffer.size() << endl;
     }
     // echo(buffer, 0.3, 0.5 * test.sampleRate); 
-    cout << "RENDERED: \t"<< score.title <<".wav" << endl;
 
     test.writeBuffer(buffer);
     test.closeWav();
+    cout << "RENDERED: \t"<< score.title <<".wav" << endl;
     return 0;
 }

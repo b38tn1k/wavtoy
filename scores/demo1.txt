@@ -4,15 +4,15 @@ Wavtoy Theme
 # Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count, Mode
 
 # KICK
-SYNTH 0.05 0.9 0.2 0.5 0.5 0.2 5 3
+SYNTH 0.05 0.9 0.5 0.5 0.5 0.2 5 3
 # SNARE
-SYNTH 0.0 0.9 0.2 0.2 0.5 0.2 5 2
+SYNTH 0.0 0.9 0.5 0.2 0.5 0.2 5 2
 # HIHAT
-SYNTH 0.4 0.9 0.05 0.1 0.2 0.9 5 2
+SYNTH 0.4 0.9 0.35 0.1 0.2 0.9 5 2
 # PAD
-SYNTH 0.4 0.4 0.03 1.5 0.5 0.7 2 1
+SYNTH 0.4 0.4 0.33 1.5 0.5 0.7 2 1
 # TING
-SYNTH 0.05 0.7 0.02 0.05 0.5 0.2 12 1
+SYNTH 0.05 0.7 0.32 0.05 0.5 0.2 12 1
 
 TRACK 1
 DIV 16
