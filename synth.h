@@ -34,7 +34,7 @@ class Synth {
         int harmonicCount;
         double additiveOsc(int n, double frequency);
         double noiseOsc(int n, double frequency);
-
+        double swoopOsc(int n, double frequency);
 };
 
 

@@ -24,7 +24,9 @@ ScoreHandler::ScoreHandler(string filename){
     f.open(filename);
     if (f.is_open()) {
         while (getline(f, contents)){
-            lines.push_back(contents);
+            if (string(contents).find("#") == -1) {
+                lines.push_back(contents);
+            }
         };
     } else {
         cout << "Read Error" << endl;
@@ -46,6 +48,7 @@ ScoreHandler::ScoreHandler(string filename){
     vector < vector <string> > scoreStrings;
     double div = 0;
     length = 0;
+    double maxLength = 0;
     for (int i = synthEnd; i < lines.size(); i++){
         if (lines[i].length() > 0) {
             // scoreStrings.push_back(splitStringOnSpace(lines[i]));
@@ -54,6 +57,8 @@ ScoreHandler::ScoreHandler(string filename){
               div = stof(temp[1]);
             } else if (temp[0].find("REST") != -1) {
                 length += (4.0/div);
+            } else if (temp[0].find("TRACK") != -1) {
+                length = 0; //restart the thing for another track
             } else {
                 int inst = 0;
                 for (vector <string>::iterator i = begin(temp); i != end(temp); ++ i) {
@@ -67,9 +72,12 @@ ScoreHandler::ScoreHandler(string filename){
                 }
                 length += (4.0/div);
             }
-            
+            if (length > maxLength) {
+                maxLength = length;
+            }
         }
     }
+    length = maxLength;
 
 }
 

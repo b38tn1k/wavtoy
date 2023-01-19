@@ -1,0 +1,458 @@
+test
+120
+
+# Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count, Mode
+
+# KICK
+SYNTH 0.05 0.9 0.2 0.5 0.5 0.2 5 3
+# SNARE
+SYNTH 0.0 0.9 0.2 0.2 0.5 0.2 5 2
+# HIHAT
+SYNTH 0.4 0.9 0.05 0.1 0.2 0.9 5 2
+# PAD
+SYNTH 0.4 0.4 0.03 1.5 0.5 0.7 2 1
+# TING
+SYNTH 0.05 0.7 0.02 0.05 0.5 0.2 12 1
+
+TRACK 1
+DIV 16
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+DIV 16
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+DIV 16
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+REST
+REST
+REST
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+C1
+REST
+    | C2
+REST
+C1
+REST
+REST
+REST
+C1
+REST
+
+TRACK 2
+DIV 1
+REST
+REST
+REST
+REST
+DIV 4
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+REST
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+DIV 8
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+DIV 12
+    |   | C3
+    |   | C3
+    |   | C3
+DIV 16
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+    |   | C3
+DIV 3
+    |   | C3
+    |   | C3
+    |   | C3
+
+
+
+TRACK 3
+DIV 1
+    |   |   | A3 C3 E3 G4
+    |   |   | C3 E3 G3 B4
+    |   |   | F3 A3 C3 E4
+    |   |   | G3 B3 D3 F4
+    |   |   | A3 C3 E3 G4
+    |   |   | C3 E3 G3 B4
+    |   |   | F3 A3 C3 E4
+    |   |   | G3 B3 D3 F4
+    |   |   | A3 C3 E3 G4
+    |   |   | C3 E3 G3 B4
+    |   |   | F3 A3 C3 E4
+    |   |   | G3 B3 D3 F4
+    |   |   | A3 C3 E3 G4
+    |   |   | C3 E3 G3 B4
+    |   |   | F3 A3 C3 E4
+    |   |   | G3 B3 D3 F4
+    |   |   | A3 C3 E3 G4
+    |   |   | C3 E3 G3 B4
+    |   |   | F3 A3 C3 E4
+    |   |   | G3 B3 D3 F4
+TRACK 4
+DIV 1
+REST
+REST
+REST
+REST
+DIV 6
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+REST
+    |   |   |   | C5
+
+    |   |   |   | E5
+    |   |   |   | F5
+REST
+    |   |   |   | G5
+    |   |   |   | F5
+    |   |   |   | E5
+
+    |   |   |   | C5
+REST
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+
+    |   |   |   | C5
+REST
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+REST
+    |   |   |   | C5
+
+    |   |   |   | E5
+    |   |   |   | F5
+REST
+    |   |   |   | G5
+    |   |   |   | F5
+    |   |   |   | E5
+
+    |   |   |   | C5
+REST
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+
+    |   |   |   | C5
+REST
+REST
+    |   |   |   | C5
+    |   |   |   | E5
+    |   |   |   | C5
+
+
+
+

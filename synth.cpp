@@ -3,7 +3,7 @@
 Synth::Synth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC, int m) {
     mode = m;
     attack = a;
-    decay = d; // doesn't work yet
+    decay = d;
     amplitude = amp;
     duration = dur;
     sampleRate = sR;
@@ -60,6 +60,17 @@ double Synth::noiseOsc(int n, double frequency) {
     return value;
 }
 
+double Synth::swoopOsc(int n, double frequency) {
+    double mult = 1.0;
+    double pitch = frequency;
+    if (n <= attackInSamples/2) {
+        mult -= attackIncrement * n;
+        pitch  = (harmonicCount * frequency * mult);
+    }
+    double value = fundamentalGain * sinSample(n, pitch, sampleRate);
+    return value;
+}
+
 vector <int> Synth::synthesise(double frequency){
     vector <int> tempBuffer;
     int N = sampleRate * duration;
@@ -74,6 +85,9 @@ vector <int> Synth::synthesise(double frequency){
             case 2:
                 value = noiseOsc(n, frequency);
                 break;
+            case 3:
+                value = swoopOsc(n, frequency);
+                break;
             default:
                 value = additiveOsc(n, frequency);
         }
@@ -81,7 +95,11 @@ vector <int> Synth::synthesise(double frequency){
         // env
         if (n <= attackInSamples) {
             env += attackIncrement;
-        } else if (n >= decayInSamples) {
+            if (mode == 3) { // i dont like this
+                env = 1.0;
+            }
+        }
+        if (n >= decayInSamples) {
             env -= decayIncrement;
         }
         //amp
