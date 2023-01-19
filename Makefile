@@ -10,16 +10,16 @@ $(TARGET): $(OBJFILES)
 main.o: main.cpp  $(OBJS)
 	$(CC) $(CFLAGS) -c main.cpp
 
-wav_handler.o: include/wav_handler.h
+wav_handler.o: include/wav_handler.h include/wav_handler.cpp
 	$(CC) $(CFLAGS) -c include/wav_handler.cpp
 
-timeline.o: include/timeline.h
+timeline.o: include/timeline.h include/timeline.cpp
 	$(CC) $(CFLAGS) -c include/timeline.cpp
 
-synth.o: include/synth.h
+synth.o: include/synth.h include/synth.cpp
 	$(CC) $(CFLAGS) -c include/synth.cpp
 
-score_handler.o: include/score_handler.h
+score_handler.o: include/score_handler.h include/score_handler.cpp
 	$(CC) $(CFLAGS) -c include/score_handler.cpp
 
 clean:
