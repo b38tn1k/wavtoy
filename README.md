@@ -76,7 +76,7 @@ F4      | F2
 
 ```
 
-Eventually it would be cool to make a curses style editor to write these files. #TODO #UPDATE - WIP in /scores/
+Eventually it would be cool to make a curses style editor to write these files. #TODO #UPDATE - WIP curses thing in progress
 
 ## Running
 ```
