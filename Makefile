@@ -39,3 +39,7 @@ clean:
 	rm -rf *.o
 
 all: $(TARGET1) $(TARGET2)
+
+target1: $(TARGET1)
+
+target2: $(TARGET2)

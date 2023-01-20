@@ -80,7 +80,7 @@ Eventually it would be cool to make a curses style editor to write these files. 
 
 ## Running
 ```
-$ make
+$ make all
 $ // computer stuff...
 $ ./wavtoy scores/twinkle.txt
 ```
