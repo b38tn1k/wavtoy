@@ -20,10 +20,12 @@ struct noteEvent {
 
 class ScoreHandler {
     public:
-        ScoreHandler(string filename);
+        ScoreHandler(string filename); // loading
+        ScoreHandler(); // making
         string title;
         double bpm;
         vector < vector <string> > instrumentStrings;
+        vector < vector <string> > fxStrings;
         vector < noteEvent > score;
         map <string, int> notes;
         double length;

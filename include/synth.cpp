@@ -112,10 +112,13 @@ vector <int> Synth::synthesise(double frequency){
 
 void Synth::addNote(vector<int> & b, int index, double frequency){
     vector <int> tempBuffer = synthesise(frequency);
+    while(buffer.size() < b.size()) {
+        buffer.push_back(0);
+    }
     // assume note fits
     // sum note into buffer;
     for(vector<int>::iterator it = begin(tempBuffer); it != end(tempBuffer); ++it){
-        b[index] += *it;
+        buffer[index] += *it;
         index++;
     }
 }

@@ -43,6 +43,13 @@ ScoreHandler::ScoreHandler(string filename){
             instrumentStrings.push_back(splitStringOnSpace(string(*it)));
             synthEnd = j;
         }
+        if (string(*it).find("FX") != -1) {
+            synthEnd = j;
+            string fxIndex = to_string(instrumentStrings.size()-1);
+            vector <string> fxString = splitStringOnSpace(string(*it));
+            fxString[0] = fxIndex;
+            fxStrings.push_back(fxString);
+        }
     }
     makeNoteMap();
     vector < vector <string> > scoreStrings;
