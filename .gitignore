@@ -5,3 +5,4 @@
 *.out
 junk.cpp
 wavtoy
+scores/wavtoy-composer
