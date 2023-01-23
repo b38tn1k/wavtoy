@@ -8,6 +8,10 @@ void populateColumn(int col, Ctable &cTab, vector<string> temp) {
 
 Meta::Meta(WINDOW *scr){
     stdscr = scr;
+    for (int i = 0; i < 10; i++){
+        clear();
+        refresh();
+    }
     mode = MODE_IDLE;
     cx = 0;
     cy = 0;
@@ -20,12 +24,13 @@ Meta::Meta(WINDOW *scr){
     optionsMenuMSG = "[S]ynthesis\t| [N]otate\t| [I]nfo\t| [W]rite File\t| [Q]uit";
     synthMenuMSG = "[+] New Synth\t| Navigate with arrows | ENTER to set";
     infoMenuMSG = "Name your project and set BPM here.";
+    notateMenuMSG = "Write you music here.";
     dontQuit = true;
     centerString("Welcome to the Wavtoy Composition Tool.");
     
     sT.addCol(false, 0, 10);
-    const char* cs[] = {"SYNTH", "ATTACK", "DECAY", "DURATION", "F.GAIN", "H.BAL", "H.COUNT", "MODE"};
-    vector<string> s(cs, cs+8);
+    const char* cs[] = {"SYNTH", "ATTACK", "DECAY", "AMPLITUDE", "DURATION", "F.GAIN", "H.BAL", "OCT.COUNT", "MODE"};
+    vector<string> s(cs, cs+9);
     populateColumn(0, sT, s);
 
     iT.addCol(false, 0, 10);
@@ -39,19 +44,17 @@ Meta::Meta(WINDOW *scr){
     populateColumn(1, iT, s3);
 }
 
-
-
 void Meta::drawHorizontalLine(int height){
     move(height, 0);
     for (int i = 0; i < getmaxx(stdscr); i++) {
-        printw("-");
+        printString("-");
     }
 }
 
 void Meta::drawVerticallLine(int X){
     for (int i = 0; i < getmaxy(stdscr)-3; i++) {
         move(i, X);
-        printw("|");
+        printString("|");
     }
 }
 
@@ -64,26 +67,21 @@ void Meta::centerString(string myStr){
     xOff = max(0, xOff);
     yOff = max(0, yOff);
     move(yOff, xOff);
-    char * myChar = new char[myStr.length() + 1];
-    copy(myStr.begin(), myStr.end(), myChar);
-    printw(myChar);
+    printString(myStr);
 }
 
 void Meta::printString(string myStr){
     char * myChar = new char[myStr.length() + 1];
     copy(myStr.begin(), myStr.end(), myChar);
+    myChar[myStr.length()] = '\0';
     printw(myChar);
 }
 
 void Meta::draw() {
     // draw and clear first
-    move(getmaxy(stdscr) - 2, 0);
-    clrtoeol();
-    printString(cmdMSG);
-    move(getmaxy(stdscr) - 2, getmaxx(stdscr)-15);
-    printString("MODE: ");
-    printString(to_string(mode));
+    // clear();
     // draw mode specific
+    int cmode = curs_set(0);
     switch(mode) {
         case MODE_IDLE:
             break;
@@ -92,6 +90,9 @@ void Meta::draw() {
             break;
         case MODE_SYNTH:
             tableViewDraw(sT);
+            break;
+        case MODE_NOTATE:
+            tableViewDraw(nT);
             break;
         case MODE_COMMAND:
             break;
@@ -110,6 +111,7 @@ void Meta::draw() {
     printString(to_string(mode));
     // reset cursor to position
     move(cy, cx); 
+    curs_set(cmode);
 }
 
 void Meta::idleUpdate(char c) {
@@ -123,8 +125,10 @@ void Meta::idleUpdate(char c) {
 }
 
 void Meta::tableViewDraw(Ctable & table){
-    drawVerticallLine(10);
-    table.draw();
+    table.draw(getmaxy(stdscr));
+    for (int i = 1; i < table.table.size(); i++) {
+        drawVerticallLine(10 * i);
+    }
 }
 
 void Meta::tableViewUpdate(char c, Ctable & table) {
@@ -151,7 +155,7 @@ void Meta::tableViewUpdate(char c, Ctable & table) {
         case 's':
         case 'j':
         case char(KEY_DOWN):
-            cy = min(cy+1, getmaxy(stdscr) - 3);
+            cy = min(cy+1, getmaxy(stdscr) - 4);
             break;
     }
 }
@@ -172,6 +176,11 @@ void Meta::commandUpdate(char c) {
         case 'I':
             cmdMSG = infoMenuMSG;
             mode = MODE_INFO;
+            break;
+        case 'n':
+        case 'N':
+            cmdMSG = notateMenuMSG;
+            mode = MODE_NOTATE;
             break;
         case 10:
             mode = MODE_IDLE;
@@ -196,7 +205,6 @@ void Meta::quitUpdate(char c) {
 }
 
 void Meta::update(char c) {
-    clear();
     switch(mode) {
         case MODE_IDLE:
             curs_set(1);
@@ -210,6 +218,10 @@ void Meta::update(char c) {
             curs_set(2);
             tableViewUpdate(c, iT);
             break;
+        case MODE_NOTATE:
+            curs_set(2);
+            tableViewUpdate(c, nT);
+            break;
         case MODE_COMMAND:
             curs_set(0);
             commandUpdate(c);
@@ -218,6 +230,40 @@ void Meta::update(char c) {
             curs_set(0);
             quitUpdate(c);
             break;
+    }
+
+}
+
+void Meta::attachScore(ScoreHandler scr){
+    score = scr;
+    //unpack
+    iT.setData(1, 0, score.title);
+    iT.setData(1, 1, to_string(score.bpm));
+    int col = 1;
+    int startx = 12;
+    int width = 10;
+    for (vector < vector <string> >::iterator i = score.instrumentStrings.begin(); i != score.instrumentStrings.end(); ++ i){
+        sT.addCol(true, startx, width);
+        for (vector <string> ::iterator j = i->begin(); j != i->end(); ++j){
+            sT.addRow(col, *j);
+        }
+        startx += (width);
+        col++;
+    }
+    startx = 0;
+    for (int i = 0; i < score.instrumentStrings.size(); i++){
+        nT.addCol(true, startx, width);
+        startx += (width+1);
+    }
+    
+    for (vector < vector <string> >::iterator i = score.scoreStrings.begin(); i != score.scoreStrings.end(); ++ i){
+        col = 0;
+        if (i->size() > 0) {
+            for (vector <string> ::iterator j = i->begin(); j != i->end(); ++j){
+                nT.addRow(col, string(*j));
+                col++;
+            }
+        }
     }
 
 }

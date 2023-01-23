@@ -25,7 +25,8 @@ class Ctable {
         int scrollY;
         void addRow(int col, string myStr);
         void addCol(bool e, int x, int w);
-        void draw(int startX=0, int startY=0);
+        void draw(int maxy, int startX=0, int startY=0);
+        void setData(int col, int row, string data);
     private:
         void printString(string myStr); //duplicate, weird
 };

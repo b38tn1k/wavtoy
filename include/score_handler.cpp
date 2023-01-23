@@ -1,11 +1,11 @@
 #include "score_handler.h"
 #include "frequencies.h"
 
-vector<string> splitStringOnSpace(string str){
+vector<string> splitStringOnSpace(string str, char splitter = ' '){
     vector<string> res;
     string s;
     for (string::iterator i = str.begin(); i != str.end(); ++i) {
-        if (*i == ' ') {
+        if (*i == splitter) {
             res.push_back(s);
             s = "";
         } else {
@@ -52,13 +52,11 @@ ScoreHandler::ScoreHandler(string filename){
         }
     }
     makeNoteMap();
-    vector < vector <string> > scoreStrings;
     double div = 0;
     length = 0;
     double maxLength = 0;
     for (int i = synthEnd; i < lines.size(); i++){
         if (lines[i].length() > 0) {
-            // scoreStrings.push_back(splitStringOnSpace(lines[i]));
             vector <string> temp = splitStringOnSpace(lines[i]);
             if (temp[0].find("DIV") != -1) {
               div = stof(temp[1]);
@@ -79,6 +77,12 @@ ScoreHandler::ScoreHandler(string filename){
                 }
                 length += (4.0/div);
             }
+            vector <string> cleaner = splitStringOnSpace(lines[i], '|');
+            while (cleaner.size() < instrumentStrings.size()) {
+                cleaner.push_back(" ");
+            }
+            scoreStrings.push_back(cleaner);
+
             if (length > maxLength) {
                 maxLength = length;
             }

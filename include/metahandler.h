@@ -15,6 +15,7 @@
 #include <vector>
 #include <ncurses.h>
 #include "cursestable.h"
+#include "score_handler.h"
 
 using namespace std;
 
@@ -25,6 +26,8 @@ class Meta {
         void draw();
         void update(char c);
         bool dontQuit;
+        void attachScore(ScoreHandler scr);
+
     private:
         WINDOW * stdscr;
         string optionsMenuMSG;
@@ -32,6 +35,7 @@ class Meta {
         string infoMenuMSG;
         string saveMenuMSG;
         string cmdMSG;
+        string notateMenuMSG;
         //update
         void tableViewUpdate(char c, Ctable & table);
         void commandUpdate(char c);
@@ -50,6 +54,8 @@ class Meta {
         Ctable sT;
         Ctable iT;
         Ctable nT;
+        // score unpacker
+        ScoreHandler score;
 };
 
 #endif
