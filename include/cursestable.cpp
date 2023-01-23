@@ -10,6 +10,7 @@ void Ctable::addCol(bool e, int x, int w) {
 }
 
 void Ctable::addRow(int col, string myStr) {
+    // table[col].width = max(table[col].width, int(myStr.length() + 1)); // need to update other x's
     table[col].data.push_back(myStr);
 }
 

@@ -29,8 +29,8 @@ Meta::Meta(WINDOW *scr){
     centerString("Welcome to the Wavtoy Composition Tool.");
     
     sT.addCol(false, 0, 10);
-    const char* cs[] = {"SYNTH", "ATTACK", "DECAY", "AMPLITUDE", "DURATION", "F.GAIN", "H.BAL", "OCT.COUNT", "MODE"};
-    vector<string> s(cs, cs+9);
+    const char* cs[] = {"TYPE", "ATTACK", "DECAY", "AMPLITUDE", "DURATION", "F.GAIN", "H.BAL", "OCT.COUNT"};
+    vector<string> s(cs, cs+8);
     populateColumn(0, sT, s);
 
     iT.addCol(false, 0, 10);
@@ -252,8 +252,8 @@ void Meta::attachScore(ScoreHandler scr){
     }
     startx = 0;
     for (int i = 0; i < score.instrumentStrings.size(); i++){
-        nT.addCol(true, startx, width);
-        startx += (width+1);
+        nT.addCol(true, startx+1, width);
+        startx += (width);
     }
     
     for (vector < vector <string> >::iterator i = score.scoreStrings.begin(); i != score.scoreStrings.end(); ++ i){

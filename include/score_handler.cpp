@@ -39,7 +39,7 @@ ScoreHandler::ScoreHandler(string filename){
     int j = 0;
     for(vector<string>::iterator it = begin(lines); it != end(lines); ++it){
         j++;
-        if (string(*it).find("SYNTH") != -1) {
+        if ((string(*it).find("SYNTH") != -1) || (string(*it).find("KICK") != -1) || (string(*it).find("NOISE") != -1)) {
             instrumentStrings.push_back(splitStringOnSpace(string(*it)));
             synthEnd = j;
         }
@@ -66,18 +66,26 @@ ScoreHandler::ScoreHandler(string filename){
                 length = 0; //restart the thing for another track
             } else {
                 int inst = 0;
-                for (vector <string>::iterator i = begin(temp); i != end(temp); ++ i) {
-                    if (string(*i).find("|") != -1) {
+                for (vector <string>::iterator k = begin(temp); k != end(temp); ++ k) {
+                    if (string(*k).find("|") != -1) {
                         inst += 1;
                     } else {
-                        if (notes.count(string(*i))>= 1) {
-                            score.push_back(noteEvent(notes[string(*i)], length, div, inst));
+                        if (notes.count(string(*k))>= 1) {
+                            score.push_back(noteEvent(notes[string(*k)], length, div, inst));
                         }
                     }
                 }
                 length += (4.0/div);
             }
             vector <string> cleaner = splitStringOnSpace(lines[i], '|');
+            for (vector <string>::iterator j = cleaner.begin(); j != cleaner.end(); ++j){
+                string tj = *j;
+                const size_t trimStart = tj.find_first_not_of(" \t");
+                if (trimStart != string::npos) {
+                    *j = tj.substr(trimStart, tj.length());
+                }
+            }
+
             while (cleaner.size() < instrumentStrings.size()) {
                 cleaner.push_back(" ");
             }

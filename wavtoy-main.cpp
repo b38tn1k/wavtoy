@@ -47,7 +47,17 @@ int main(int argc, char *argv[]){
     vector <Synth> instruments;
     for (vector < vector <string> >::iterator i = begin(score.instrumentStrings); i != end(score.instrumentStrings); ++i){
         vector<string> temp = *i;
-        instruments.push_back(Synth(stof(temp[1]), stof(temp[2]), stof(temp[3]), stof(temp[4]), wav.sampleRate, stof(temp[5]), stof(temp[6]), stoi(temp[7]), stoi(temp[8])));
+        int mode = 1;
+        if (temp[0].find("SYNTH") != -1) {
+            mode = 1;
+        }
+        if (temp[0].find("KICK") != -1) {
+            mode = 3;
+        }
+        if (temp[0].find("NOISE") != -1) {
+            mode = 2;
+        }
+        instruments.push_back(Synth(stof(temp[1]), stof(temp[2]), stof(temp[3]), stof(temp[4]), wav.sampleRate, stof(temp[5]), stof(temp[6]), stoi(temp[7]), mode));
         if (stof(temp[4]) > maxDuration) {
             maxDuration = stof(temp[4]); 
         }

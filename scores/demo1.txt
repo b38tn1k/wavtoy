@@ -4,283 +4,299 @@ Wavtoy Theme
 # Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count, Mode
 
 # KICK
-SYNTH 0.05 0.9 0.25 0.5 0.5 0.2 5 3
+KICK 0.05 0.9 0.25 0.5 0.5 0.2 5
 # SNARE
-SYNTH 0.0 0.9 0.2 0.2 0.5 0.2 5 2
+NOISE 0.0 0.9 0.2 0.2 0.5 0.2 5
 # HIHAT
-SYNTH 0.4 0.9 0.2 0.1 0.2 0.9 5 2
+NOISE 0.4 0.9 0.2 0.1 0.2 0.9 5
 # PAD
-SYNTH 0.4 0.4 0.1 1.5 0.5 0.7 2 1
+SYNTH 0.4 0.4 0.1 1.5 0.5 0.7 2
 # TING
-SYNTH 0.05 0.7 0.05 0.05 0.5 0.2 12 1
+SYNTH 0.05 0.7 0.05 0.05 0.5 0.2 12
 FX ECHO 0.3 0.5
 
 TRACK 1
 DIV 16
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | A3 C3 E3 G4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
 
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | C3 E3 G3 B4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
 
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | F3 A3 C3 E4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
 
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | G3 B3 D3 F4       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
 DIV 16
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | A3 C3 E3 G4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
 
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | C3 E3 G3 B4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
 
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | F3 A3 C3 E4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
 
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | G3 B3 D3 F4       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
 DIV 16
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-REST
-REST
-REST
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-C1
-REST
-    | C2
-REST
-C1
-REST
-REST
-REST
-C1
-REST
+C1      |       |       | A3 C3 E3 G4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+
+C1      |       |       | C3 E3 G3 B4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+C1      |       |       | F3 A3 C3 E4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+C1      |       |       | G3 B3 D3 F4       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+DIV 16
+C1      |       |       | A3 C3 E3 G4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+
+C1      |       |       | C3 E3 G3 B4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+C1      |       |       | F3 A3 C3 E4       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+C1      |       |       | G3 B3 D3 F4       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+        | C2    |       |       
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |       
+REST    |       |       |  
+REST    |       |       |       
+C1      |       |       |       
+REST    |       |       |
+
+DIV 1
+        |       |       | A3 C3 E3 G4
+        |       |       | C3 E3 G3 B4
+        |       |       | F3 A3 C3 E4
+        |       |       | G3 B3 D3 F4
 
 TRACK 2
 DIV 1
@@ -372,29 +388,8 @@ DIV 3
 
 
 
+
 TRACK 3
-DIV 1
-    |   |   | A3 C3 E3 G4
-    |   |   | C3 E3 G3 B4
-    |   |   | F3 A3 C3 E4
-    |   |   | G3 B3 D3 F4
-    |   |   | A3 C3 E3 G4
-    |   |   | C3 E3 G3 B4
-    |   |   | F3 A3 C3 E4
-    |   |   | G3 B3 D3 F4
-    |   |   | A3 C3 E3 G4
-    |   |   | C3 E3 G3 B4
-    |   |   | F3 A3 C3 E4
-    |   |   | G3 B3 D3 F4
-    |   |   | A3 C3 E3 G4
-    |   |   | C3 E3 G3 B4
-    |   |   | F3 A3 C3 E4
-    |   |   | G3 B3 D3 F4
-    |   |   | A3 C3 E3 G4
-    |   |   | C3 E3 G3 B4
-    |   |   | F3 A3 C3 E4
-    |   |   | G3 B3 D3 F4
-TRACK 4
 DIV 1
 REST
 REST
@@ -455,7 +450,3 @@ REST
     |   |   |   | C5
     |   |   |   | E5
     |   |   |   | C5
-
-
-
-
