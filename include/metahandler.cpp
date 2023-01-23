@@ -15,6 +15,7 @@ Meta::Meta(WINDOW *scr){
     mode = MODE_IDLE;
     cx = 0;
     cy = 0;
+    vcy = 0;
     curs_set(0);
     sT = Ctable();
     iT = Ctable();
@@ -24,7 +25,7 @@ Meta::Meta(WINDOW *scr){
     optionsMenuMSG = "[S]ynthesis\t| [N]otate\t| [I]nfo\t| [W]rite File\t| [Q]uit";
     synthMenuMSG = "[+] New Synth\t| Navigate with arrows | ENTER to set";
     infoMenuMSG = "Name your project and set BPM here.";
-    notateMenuMSG = "Write you music here.";
+    notateMenuMSG = "[+] New Synth\t| Navigate with arrows | ENTER to set";
     dontQuit = true;
     centerString("Welcome to the Wavtoy Composition Tool.");
     
@@ -78,9 +79,6 @@ void Meta::printString(string myStr){
 }
 
 void Meta::draw() {
-    // draw and clear first
-    // clear();
-    // draw mode specific
     int cmode = curs_set(0);
     switch(mode) {
         case MODE_IDLE:
@@ -99,44 +97,60 @@ void Meta::draw() {
         case MODE_QUIT:
             break;
     }
+    
+    // reset cursor to position
+    move(cy, cx); 
+    curs_set(cmode);
+    drawCommandBar();
+}
+
+void Meta::toggleMode(int newMode) {
+    clear();
+    mode = newMode;
+    drawCommandBar();
+}
+
+void Meta::drawCommandBar(){
     // draw on top
+    int cmode = curs_set(0);
     drawHorizontalLine(getmaxy(stdscr) - 3);
     drawHorizontalLine(getmaxy(stdscr) - 1);
-    // draw command thing again just in case
     move(getmaxy(stdscr) - 2, 0);
     clrtoeol();
     printString(cmdMSG);
     move(getmaxy(stdscr) - 2, getmaxx(stdscr)-15);
     printString("MODE: ");
     printString(to_string(mode));
-    // reset cursor to position
     move(cy, cx); 
     curs_set(cmode);
+
 }
 
 void Meta::idleUpdate(char c) {
     switch(c) {
         case ':':
-            mode = MODE_COMMAND;
             cmdMSG = optionsMenuMSG;
+            toggleMode(MODE_COMMAND);
             curs_set(0);
             break;
     }
 }
 
 void Meta::tableViewDraw(Ctable & table){
-    table.draw(getmaxy(stdscr));
+    table.draw(getmaxy(stdscr), vcy);
     for (int i = 1; i < table.table.size(); i++) {
         drawVerticallLine(10 * i);
     }
 }
 
 void Meta::tableViewUpdate(char c, Ctable & table) {
+    bool leave = false;
     switch(c) {
         case ':':
-            mode = MODE_COMMAND;
             cmdMSG = optionsMenuMSG;
+            toggleMode(MODE_COMMAND);
             curs_set(0);
+            leave = true;
             break;
         case 'a':
         case 'h':
@@ -151,12 +165,21 @@ void Meta::tableViewUpdate(char c, Ctable & table) {
         case 'k':
         case char(KEY_UP):
             cy = max(0, cy-1);
+            if (cy == 0) {
+                vcy = max(0, vcy-1);
+            }
             break;
         case 's':
         case 'j':
         case char(KEY_DOWN):
             cy = min(cy+1, getmaxy(stdscr) - 4);
+            if (cy == getmaxy(stdscr) - 4) {
+                vcy = min(vcy + 1, table.maxHeight());
+            }
             break;
+    }
+    if (leave == false) {
+        cmdMSG = baseMSG + " " + table.getEntry(cx, cy);
     }
 }
 
@@ -165,26 +188,30 @@ void Meta::commandUpdate(char c) {
         case 'q':
         case 'Q':
             cmdMSG = "Quit? y/n";
-            mode = MODE_QUIT;
+            toggleMode(MODE_QUIT);
             break;
         case 's':
         case 'S':
-            cmdMSG = synthMenuMSG;
-            mode = MODE_SYNTH;
+            baseMSG = synthMenuMSG;
+            cmdMSG = baseMSG;
+            toggleMode(MODE_SYNTH);
             break;
         case 'i':
         case 'I':
-            cmdMSG = infoMenuMSG;
-            mode = MODE_INFO;
+            baseMSG = infoMenuMSG;
+            cmdMSG = baseMSG;
+            toggleMode(MODE_INFO);
             break;
         case 'n':
         case 'N':
-            cmdMSG = notateMenuMSG;
-            mode = MODE_NOTATE;
+            baseMSG = notateMenuMSG;
+            baseMSG = notateMenuMSG;
+            cmdMSG = baseMSG;
+            toggleMode(MODE_NOTATE);
             break;
         case 10:
-            mode = MODE_IDLE;
             cmdMSG =  "press ':' for options";
+            toggleMode(MODE_IDLE);
             break;
     }
 }
@@ -198,8 +225,8 @@ void Meta::quitUpdate(char c) {
             break;
         case 'n':
         case 'N':
-            mode = MODE_IDLE;
             cmdMSG = "Quit Aborted";
+            toggleMode(MODE_IDLE);
             break;
     }
 }
@@ -223,6 +250,7 @@ void Meta::update(char c) {
             tableViewUpdate(c, nT);
             break;
         case MODE_COMMAND:
+            vcy = 0;
             curs_set(0);
             commandUpdate(c);
             break;

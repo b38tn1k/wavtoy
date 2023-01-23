@@ -35,6 +35,7 @@ class Meta {
         string infoMenuMSG;
         string saveMenuMSG;
         string cmdMSG;
+        string baseMSG;
         string notateMenuMSG;
         //update
         void tableViewUpdate(char c, Ctable & table);
@@ -43,13 +44,15 @@ class Meta {
         void idleUpdate(char c);
         //draw
         void tableViewDraw(Ctable & table);
+        void drawCommandBar();
         //utils
         void drawHorizontalLine(int height);
         void drawVerticallLine(int X);
         void printString(string myStr);
         void centerString(string myStr);
+        void toggleMode(int newMode);
         // cursor tracker
-        int cx, cy;
+        int cx, cy, vcy;
         // tables
         Ctable sT;
         Ctable iT;

@@ -22,24 +22,47 @@ void Ctable::setData(int col, int row, string data) {
     }
 }
 
-void Ctable::draw(int maxy, int startX, int startY){
+int Ctable::maxHeight() {
+    int mh = 0;
+    for (vector < column >::iterator i = table.begin(); i != table.end(); ++i){
+        mh = max(mh, int(i->data.size()));
+    }
+    return mh;
+}
+
+void Ctable::draw(int maxy, int virtCursor, int startX, int startY){
     int x;
     int y;
     for (vector < column >::iterator i = table.begin(); i != table.end(); ++i){
         vector <string> strs = i->data;
-        y = startY;
+        y = startY - virtCursor;
         x = startX + int(i->x);
         for (vector <string> ::iterator str = strs.begin(); str != strs.end(); ++str){
-            move(y, x);
-            printString(string(i->width, ' ')); //clear?
-            move(y, x);
-            printString(*str);
+            if (y >= 0) {
+                move(y, x);
+                printString(string(i->width, ' ')); //clear?
+                move(y, x);
+                printString(*str);
+            }
             y += 1;
             if (y == maxy) {
                 break;
             }
         }
     }
+}
+
+string Ctable::getEntry(int x, int y) {
+    string result = " ";
+    for (vector < column > :: iterator col = table.begin(); col != table.end(); ++col){
+        if (x > col->x && x < (col->x + col->width)) {
+            if (y < col->data.size()) {
+                result += col->data[y];
+                break;
+            }
+        }
+    }
+    return "[" + result + "] ";
 }
 
 void Ctable::printString(string myStr){ //duplicate, why cant I do this?

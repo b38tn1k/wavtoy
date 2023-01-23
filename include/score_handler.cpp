@@ -81,8 +81,11 @@ ScoreHandler::ScoreHandler(string filename){
             for (vector <string>::iterator j = cleaner.begin(); j != cleaner.end(); ++j){
                 string tj = *j;
                 const size_t trimStart = tj.find_first_not_of(" \t");
+                const size_t trimEnd = tj.find_last_not_of(" \t");
                 if (trimStart != string::npos) {
-                    *j = tj.substr(trimStart, tj.length());
+                    *j = tj.substr(trimStart, (trimEnd - trimStart + 1));
+                } else {
+                    *j = " ";
                 }
             }
 
