@@ -23,11 +23,13 @@ class WAV {
         u_int channelCount;
         u_int sampleRate;
         u_int bitDepth;
+        u_int maxAmp;
         WAV(string f){
             filename = f;
             channelCount = 2;
             sampleRate = 44100;
             bitDepth = 16;
+            maxAmp = 32760;
         }
         WAV(string f, u_int8_t cC, u_int8_t sR, u_int8_t bD){
             filename = f;
@@ -39,7 +41,7 @@ class WAV {
         void openWav();
         void closeWav();
         void writeSample(int value, int size);
-        void writeBuffer(vector<int> buffer);
+        void writeBuffer(vector<double> buffer);
     private:
         u_int data_chunk_pos;
         

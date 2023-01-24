@@ -1,14 +1,15 @@
 Wavtoy Theme
 120
 
-# Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count, Mode
+# Attack, Decay, Amp, Duration, Fundamental Gain, Harmonic Balance, Harmonic Count
 
 # KICK
 KICK 0.05 0.9 0.25 0.5 0.5 0.2 5
 # SNARE
 NOISE 0.0 0.9 0.2 0.2 0.5 0.2 5
 # HIHAT
-NOISE 0.4 0.9 0.2 0.1 0.2 0.9 5
+NOISE 0.4 0.9 0.5 0.1 0.2 0.9 5
+FX HPF 0.8
 # PAD
 SYNTH 0.4 0.4 0.1 1.5 0.5 0.7 2
 # TING

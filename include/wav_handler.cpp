@@ -21,9 +21,9 @@ void WAV::writeSample(int value, int size){
     write_word(f, value, size);
 }
 
-void WAV::writeBuffer(vector<int> buffer) {
-    for(vector<int>::iterator it = begin(buffer); it != end(buffer); ++it){
-        writeSample(*it, 2);
+void WAV::writeBuffer(vector<double> buffer) {
+    for(vector<double>::iterator it = begin(buffer); it != end(buffer); ++it){
+        writeSample(*it * maxAmp, 2);
     }
 }
 

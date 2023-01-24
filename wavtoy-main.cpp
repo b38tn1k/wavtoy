@@ -11,13 +11,26 @@
 
 using namespace std;
 
-void echo(vector<int> & b, double decay, double time, int sR) {
+void echo(vector<double> & b, double decay, double time, int sR) {
     double invDecay = 1.0 - decay;
     time *= sR;
-    for(vector<int>::iterator it = begin(b); it != end(b); ++it){
+    for(vector<double>::iterator it = begin(b); it != end(b); ++it){
         if (it - begin(b)> time) {
             *it = invDecay * (*it) + decay * (*(it-time));
         }
+    }
+}
+
+void filter(vector<double> & b, double K, bool flip = false) {
+    double invK = 1.0 - K;
+    for (int i = 1; i < b.size(); i++) {
+        double v = K * b[i] + invK * b[i-1];
+        if (flip == true) {
+            b[i] -= v;
+        } else {
+            b[i] = v;
+        }
+         
     }
 }
 
@@ -62,7 +75,7 @@ int main(int argc, char *argv[]){
             maxDuration = stof(temp[4]); 
         }
     }
-    vector<int> buffer;
+    vector<double> buffer;
     wav.openWav();
     seq.addBeats(buffer, ceil(score.length));
     seq.addSilence(buffer, maxDuration);
@@ -76,12 +89,18 @@ int main(int argc, char *argv[]){
     int j = 0;
     // apply effects to instrument buffers and write to master buffer
     for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
-        vector <int> tempB = i->buffer;
+        vector <double> tempB = i->buffer;
         for (vector < vector <string> >::iterator k = begin(score.fxStrings); k != end(score.fxStrings); ++k){
             vector <string> tempFX = *k;
             if (j == stoi(tempFX[0])){
                 if (tempFX[1].find("ECHO") != -1) { // can't switch on string :-<
                     echo(tempB, stof(tempFX[2]), stof(tempFX[3]), wav.sampleRate);
+                }
+                if (tempFX[1].find("LPF") != -1) {
+                    filter(tempB, stof(tempFX[2]));
+                }
+                if (tempFX[1].find("HPF") != -1) {
+                    filter(tempB, stof(tempFX[2]), true);
                 }
             }
         }
@@ -91,9 +110,6 @@ int main(int argc, char *argv[]){
         }
         // transform(buffer.begin(), buffer.end(), temp.begin(), temp.end(), plus<int>());
     }
-
-    // echo(buffer, 0.3, 0.5 * wav.sampleRate); 
-
     wav.writeBuffer(buffer);
     wav.closeWav();
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;

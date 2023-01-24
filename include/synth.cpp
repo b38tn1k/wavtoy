@@ -71,8 +71,8 @@ double Synth::swoopOsc(int n, double frequency) {
     return value;
 }
 
-vector <int> Synth::synthesise(double frequency){
-    vector <int> tempBuffer;
+vector <double> Synth::synthesise(double frequency){
+    vector <double> tempBuffer;
     int N = sampleRate * duration;
     double env = 0.0;
     for (int n = 0; n < N; n++){
@@ -105,19 +105,20 @@ vector <int> Synth::synthesise(double frequency){
         //amp
         value *= env;
         // write to temp buffer
-        tempBuffer.push_back(value * MAX_AMP * amplitude);
+        // tempBuffer.push_back(value * MAX_AMP * amplitude);
+        tempBuffer.push_back(value * amplitude);
     }
     return tempBuffer;
 }
 
-void Synth::addNote(vector<int> & b, int index, double frequency){
-    vector <int> tempBuffer = synthesise(frequency);
+void Synth::addNote(vector<double> & b, int index, double frequency){
+    vector <double> tempBuffer = synthesise(frequency);
     while(buffer.size() < b.size()) {
         buffer.push_back(0);
     }
     // assume note fits
     // sum note into buffer;
-    for(vector<int>::iterator it = begin(tempBuffer); it != end(tempBuffer); ++it){
+    for(vector<double>::iterator it = begin(tempBuffer); it != end(tempBuffer); ++it){
         buffer[index] += *it;
         index++;
     }

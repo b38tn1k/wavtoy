@@ -10,8 +10,8 @@ using namespace std;
 class Timeline {
     public:
         void setBPM(double b);
-        void addBeats(vector<int> & b, int count);
-        void addSilence(vector<int> & b, double dur);
+        void addBeats(vector<double> & b, int count);
+        void addSilence(vector<double> & b, double dur);
         int getSampleIndexFromCursor(u_int beatSubDivision, double multiples);
         int cursor;
         Timeline(int sR) {

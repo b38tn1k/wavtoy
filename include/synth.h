@@ -10,15 +10,14 @@
 using namespace std;
 
 #define TWO_PI 6.283185307179586476925286766559
-#define MAX_AMP 32760
 
 class Synth {
     public:
         Synth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC, int m);
-        void addNote(vector<int> & b, int index, double frequency);
-        vector <int> synthesise(double frequency);
+        void addNote(vector<double> & b, int index, double frequency);
+        vector <double> synthesise(double frequency);
         void setTimbre(double fG, double hB, int hC);
-        vector<int> buffer;
+        vector<double> buffer;
     private:
         u_int sampleRate;
         u_int mode;
