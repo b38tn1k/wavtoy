@@ -9,6 +9,12 @@
 #include "include/synth.h"
 #include "include/score_handler.h"
 
+// I thought using loops was cheating so I programmed my own samples. Then I thought using samples was cheating so I recorded real drums.
+
+// I then thought that programming it was cheating so I learnt to play drums for real. I then thought using bought drums was cheating so I learnt to make my own.
+
+// I then thought that using pre-made skins was cheating so I killed a goat and skinned it. I then thought that that was cheating too, so I grew my own goat from a baby goat. I also think that is cheating but I'm not sure where to go from here. I haven't made any music lately, what with the goat farming and all.
+
 using namespace std;
 
 void echo(vector<double> & b, double decay, double time, int sR) {
@@ -30,7 +36,57 @@ void filter(vector<double> & b, double K, bool flip = false) {
         } else {
             b[i] = v;
         }
-         
+    }
+}
+
+double getMinMax(vector<double> & b) {
+    double minmax = 0;
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        if (abs(*i) > minmax) {
+            minmax = abs(*i);
+        }
+    }
+    return minmax;
+}
+
+void crush(vector<double> & b, int bitz) {
+    double bdmap = bitz;
+    double minmax = getMinMax(b);
+    //scaling bitcrush cause otherwise will be meh
+    double ratio = bdmap / minmax;
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        double temp = floor(*i * ratio);
+        *i = temp / ratio;
+    }
+}
+
+void mult(vector<double> & b, int L) {
+    double mm = getMinMax(b);
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        double mlt = *i / (abs(*i));
+        *i *= (*(i + L)) * mlt;
+    }
+    double mm2 = getMinMax(b);
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        *i *= mm/mm2;
+    }
+
+}
+
+
+void wavefold(vector<double> & b, double L) {
+    double minmax = getMinMax(b);
+    double uthresh = L * minmax;
+    double lthresh = L * minmax * -1;
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        if (*i > uthresh) {
+            double delta = *i - uthresh;
+            *i = uthresh - delta;
+        } else if (*i < lthresh) {
+            double delta = *i - lthresh;
+            *i = lthresh - delta;
+        }
+        *i *= (1.0 + L);
     }
 }
 
@@ -101,6 +157,15 @@ int main(int argc, char *argv[]){
                 }
                 if (tempFX[1].find("HPF") != -1) {
                     filter(tempB, stof(tempFX[2]), true);
+                }
+                if (tempFX[1].find("WAVEFOLD") != -1) {
+                    wavefold(tempB, stof(tempFX[2]));
+                }
+                if (tempFX[1].find("CRUSH") != -1) {
+                    crush(tempB, stof(tempFX[2]));
+                }
+                if (tempFX[1].find("MULT") != -1) {
+                    mult(tempB, stof(tempFX[2]));
                 }
             }
         }
