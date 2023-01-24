@@ -158,7 +158,7 @@ int main(int argc, char *argv[]){
                 if (tempFX[1].find("HPF") != -1) {
                     filter(tempB, stof(tempFX[2]), true);
                 }
-                if (tempFX[1].find("WAVEFOLD") != -1) {
+                if (tempFX[1].find("FOLD") != -1) {
                     wavefold(tempB, stof(tempFX[2]));
                 }
                 if (tempFX[1].find("CRUSH") != -1) {
