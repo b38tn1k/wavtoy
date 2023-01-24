@@ -2,15 +2,23 @@
 
 WAV rendering synth sequencer with percussive and additive synthesis tones. 
 
+## Running
+```
+$ make all
+$ // computer stuff...
+$ ./wavtoy scores/twinkle.txt
+```
+
 ## Scores
-Some example input files are shown in `/scores`. The text files layout looks a bit like a tracker sequencer.
+Scores are written in .txt files. Some example input files are shown in [scores](scores/). The layout looks a bit like a tracker sequencer.
 
 ### Header Information
 The header contains sone information including:
-        - Title
-        - BPM
-        - Synthesis and Effect Modes
-        - Song meta-structure
+
+ - Title
+ - BPM
+ - Synthesis and Effect Modes
+ - Song meta-structure
 
 ```
 Wavtoy Theme
@@ -150,10 +158,3 @@ REST
 ```
 ## Editor
 A slacker/no-lint curses editor is being built in parallel. It doesnt work enough yet.
-
-## Running
-```
-$ make all
-$ // computer stuff...
-$ ./wavtoy scores/twinkle.txt
-```
