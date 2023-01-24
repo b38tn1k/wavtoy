@@ -43,13 +43,17 @@ SYNTH 0.4 0.4 0.03 1.5 0.5 0.7 2 1
 # TING
 SYNTH 0.05 0.7 0.02 0.05 0.5 0.2 12 1
 
-# You can sequence multiple tracks, eg
+# You can build a song out of sections, eg
 
-TRACK 1
+SEQUENCE
+SEC1 SEC2
+SEC1
+SEC1 SEC2
+END SEQUENCE
 
-# each TRACK keyword sets the sequencer cursor to zero.
-# It is sometimes it is easier to write the instrument parts seperate
-# It is also the only way to write polyrhythms 
+SEC1
+
+# each SEC# keyword starts a new section
 
 # the DIV keyword sets the beat resolution, for example:
 
@@ -64,7 +68,7 @@ DIV 1 # 1 measure
         | C2                                # here the second two instruments aren't playing, so they dont need columns
 REST                                        # REST 
 
-TRACK 2         # a new sequence that playes with the above but in triplets
+SEC2         # a new section that can be used in the sequence definition
 
 DIV 12
 
