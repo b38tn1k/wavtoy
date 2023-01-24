@@ -173,7 +173,6 @@ int main(int argc, char *argv[]){
         for (int i = 0; i < tempB.size(); i++) {
             buffer[i] += tempB[i];
         }
-        // transform(buffer.begin(), buffer.end(), temp.begin(), temp.end(), plus<int>());
     }
     wav.writeBuffer(buffer);
     wav.closeWav();

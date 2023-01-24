@@ -18,6 +18,14 @@ struct noteEvent {
     noteEvent(double f, double bI, int bD, int inst) : frequency(f), beatIndex(bI), beatDivision(bD), instrument(inst) {}
 };
 
+struct seq {
+    double length;
+    string name;
+    vector < noteEvent > score;
+    seq (string n): name(n) {}
+    seq () {}
+};
+
 class ScoreHandler {
     public:
         ScoreHandler(string filename); // loading
@@ -27,11 +35,18 @@ class ScoreHandler {
         vector < vector <string> > instrumentStrings;
         vector < vector <string> > fxStrings;
         vector < vector <string> > scoreStrings;
+        vector < vector <string> > structureStrings;
         vector < noteEvent > score;
         map <string, int> notes;
         double length;
     private:
         void makeNoteMap();
+        int readHead(vector<string> lines);
+        void cleanScoreForEditor(string line);
+        double readScoreLine(string line, double div);
+        map < string, seq > sequences;
+        string currentSeq;
+        noteEvent offsetNEIndex(noteEvent nE, double off);
 
 };
 

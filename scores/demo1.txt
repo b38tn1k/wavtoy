@@ -19,7 +19,15 @@ SYNTH 0.4 0.4 0.1 1.5 0.5 0.7 2
 SYNTH 0.05 0.7 0.05 0.05 0.5 0.2 12
 FX ECHO 0.3 0.5
 
-TRACK 1
+STRUCTURE
+SEC1
+SEC1 SEC3 SEC4
+SEC1 SEC4 SEC5
+SEC1 SEC5
+SEC2 SEC6
+END STRUCTURE
+
+SEC1
 DIV 16
 C1      |       |       | A3 C3 E3 G4       
 REST    |       |       |       
@@ -89,225 +97,14 @@ REST    |       |       |
 C1      |       |       |       
 REST    |       |       |
 
-DIV 16
-C1      |       |       | A3 C3 E3 G4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-
-C1      |       |       | C3 E3 G3 B4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | F3 A3 C3 E4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | G3 B3 D3 F4       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-DIV 16
-C1      |       |       | A3 C3 E3 G4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-
-C1      |       |       | C3 E3 G3 B4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | F3 A3 C3 E4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | G3 B3 D3 F4       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-DIV 16
-C1      |       |       | A3 C3 E3 G4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-
-C1      |       |       | C3 E3 G3 B4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | F3 A3 C3 E4       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
-C1      |       |       | G3 B3 D3 F4       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-        | C2    |       |       
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |       
-REST    |       |       |  
-REST    |       |       |       
-C1      |       |       |       
-REST    |       |       |
-
+SEC2
 DIV 1
         |       |       | A3 C3 E3 G4
         |       |       | C3 E3 G3 B4
         |       |       | F3 A3 C3 E4
         |       |       | G3 B3 D3 F4
 
-TRACK 2
-DIV 1
-REST
-REST
-REST
-REST
+SEC3
 DIV 4
 REST
     |   | C3
@@ -325,6 +122,9 @@ REST
     |   | C3
 REST
     |   | C3
+
+SEC5
+DIV 4
     |   | C3
     |   | C3
     |   | C3
@@ -341,22 +141,9 @@ REST
     |   | C3
     |   | C3
     |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
-    |   | C3
+
+SEC6
+DIV 4
     |   | C3
     |   | C3
     |   | C3
@@ -388,45 +175,9 @@ DIV 3
     |   | C3
     |   | C3
     |   | C3
-    |   | C3
 
-
-
-
-TRACK 3
-DIV 1
-REST
-REST
-REST
-REST
+SEC4
 DIV 6
-REST
-    |   |   |   | C5
-    |   |   |   | E5
-    |   |   |   | C5
-REST
-    |   |   |   | C5
-
-    |   |   |   | E5
-    |   |   |   | F5
-REST
-    |   |   |   | G5
-    |   |   |   | F5
-    |   |   |   | E5
-
-    |   |   |   | C5
-REST
-REST
-    |   |   |   | C5
-    |   |   |   | E5
-    |   |   |   | C5
-
-    |   |   |   | C5
-REST
-REST
-    |   |   |   | C5
-    |   |   |   | E5
-    |   |   |   | C5
 REST
     |   |   |   | C5
     |   |   |   | E5

@@ -35,72 +35,126 @@ ScoreHandler::ScoreHandler(string filename){
     // EXAMINE TXT CONTENTS
     title = lines[0]; // title
     bpm = stof(lines[1]); //bpm
-    int synthEnd = 0;
+
+    int notationBegin = readHead(lines);
+    makeNoteMap();
+    
+    double div = 0;
+    length = 0;
+    currentSeq = "START";
+    sequences[currentSeq] = seq(currentSeq);
+
+    for (int i = notationBegin; i < lines.size(); i++){
+        div = readScoreLine(lines[i], div);
+        cleanScoreForEditor(lines[i]);
+    }
+    sequences[currentSeq].length = length;
+    double sIndex = 0.0;
+    vector < noteEvent > tempScore;
+    for (vector < vector <string> > :: iterator j = structureStrings.begin(); j != structureStrings.end(); ++j){
+        double maxSeqLength = 0.0;
+        for (vector <string> ::iterator k = j->begin(); k != j->end(); ++k) {
+            for (vector <noteEvent> :: iterator n = sequences[*k].score.begin(); n != sequences[*k].score.end(); ++n){
+                tempScore.push_back(offsetNEIndex(*n, sIndex));
+            }
+            if (sequences[*k].length > maxSeqLength) {
+                maxSeqLength = sequences[*k].length;
+            }
+        }
+        sIndex += maxSeqLength;
+    }
+    score = tempScore;
+    length = sIndex;
+}
+
+noteEvent ScoreHandler::offsetNEIndex(noteEvent nE, double off) {
+    double frequency = nE.frequency;
+    double beatIndex = nE.beatIndex + off;
+    u_int beatDivision = nE.beatDivision;
+    u_int instrument = nE.instrument;
+    return noteEvent(frequency, beatIndex, beatDivision, instrument);
+}
+
+double ScoreHandler::readScoreLine(string line, double div){
+    if (line.length() == 0) {
+        return div;
+    }
+    vector <string> temp = splitStringOnSpace(line);
+    if (temp[0].find("DIV") != -1) {
+        div = stof(temp[1]);
+    } else if (temp[0].find("REST") != -1) {
+        length += (4.0/div);
+    } else if (temp[0].find("SEC") != -1) {
+        sequences[currentSeq].length = length;
+        currentSeq = line;
+        sequences[currentSeq] = seq(line);
+        length = 0; //restart the thing for another SEC
+    } else {
+        int inst = 0;
+        for (vector <string>::iterator k = begin(temp); k != end(temp); ++ k) {
+            if (string(*k).find("|") != -1) {
+                inst += 1;
+            } else {
+                if (notes.count(string(*k))>= 1) {
+                    sequences[currentSeq].score.push_back(noteEvent(notes[string(*k)], length, div, inst));
+                }
+            }
+        }
+        length += (4.0/div);
+    }
+    return div;
+}
+
+void ScoreHandler::cleanScoreForEditor(string line){
+    vector <string> cleaner = splitStringOnSpace(line, '|');
+    for (vector <string>::iterator j = cleaner.begin(); j != cleaner.end(); ++j){
+        string tj = *j;
+        const size_t trimStart = tj.find_first_not_of(" \t");
+        const size_t trimEnd = tj.find_last_not_of(" \t");
+        if (trimStart != string::npos) {
+            *j = tj.substr(trimStart, (trimEnd - trimStart + 1));
+        } else {
+            *j = " ";
+        }
+    }
+    while (cleaner.size() < instrumentStrings.size()) {
+        cleaner.push_back(" ");
+    }
+    scoreStrings.push_back(cleaner);
+}
+
+int ScoreHandler::readHead(vector<string> lines){
+    int notationBegin = 0;
     int j = 0;
+    bool structure = false;
     for(vector<string>::iterator it = begin(lines); it != end(lines); ++it){
         j++;
         if ((string(*it).find("SYNTH") != -1) || (string(*it).find("KICK") != -1) || (string(*it).find("NOISE") != -1)) {
             instrumentStrings.push_back(splitStringOnSpace(string(*it)));
-            synthEnd = j;
+            notationBegin = j;
         }
         if (string(*it).find("FX") != -1) {
-            synthEnd = j;
+            notationBegin = j;
             string fxIndex = to_string(instrumentStrings.size()-1);
             vector <string> fxString = splitStringOnSpace(string(*it));
             fxString[0] = fxIndex;
             fxStrings.push_back(fxString);
         }
-    }
-    makeNoteMap();
-    double div = 0;
-    length = 0;
-    double maxLength = 0;
-    for (int i = synthEnd; i < lines.size(); i++){
-        if (lines[i].length() > 0) {
-            vector <string> temp = splitStringOnSpace(lines[i]);
-            if (temp[0].find("DIV") != -1) {
-              div = stof(temp[1]);
-            } else if (temp[0].find("REST") != -1) {
-                length += (4.0/div);
-            } else if (temp[0].find("TRACK") != -1) {
-                length = 0; //restart the thing for another track
-            } else {
-                int inst = 0;
-                for (vector <string>::iterator k = begin(temp); k != end(temp); ++ k) {
-                    if (string(*k).find("|") != -1) {
-                        inst += 1;
-                    } else {
-                        if (notes.count(string(*k))>= 1) {
-                            score.push_back(noteEvent(notes[string(*k)], length, div, inst));
-                        }
-                    }
-                }
-                length += (4.0/div);
-            }
-            vector <string> cleaner = splitStringOnSpace(lines[i], '|');
-            for (vector <string>::iterator j = cleaner.begin(); j != cleaner.end(); ++j){
-                string tj = *j;
-                const size_t trimStart = tj.find_first_not_of(" \t");
-                const size_t trimEnd = tj.find_last_not_of(" \t");
-                if (trimStart != string::npos) {
-                    *j = tj.substr(trimStart, (trimEnd - trimStart + 1));
-                } else {
-                    *j = " ";
-                }
-            }
+        if (string(*it).find("STRUCTURE") != -1) {
+            structure = true;
+            notationBegin = j;
+        }
 
-            while (cleaner.size() < instrumentStrings.size()) {
-                cleaner.push_back(" ");
-            }
-            scoreStrings.push_back(cleaner);
+        if (structure == true && (string(*it).find("SEC") != -1)) {
+            structureStrings.push_back(splitStringOnSpace(string(*it)));
+        }
 
-            if (length > maxLength) {
-                maxLength = length;
-            }
+        if (string(*it).find("END STRUCTURE") != -1) {
+            structure = false;
+            notationBegin = j;
         }
     }
-    length = maxLength;
-
+    return notationBegin;
 }
 
 void ScoreHandler::makeNoteMap() {
