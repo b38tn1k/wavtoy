@@ -47,7 +47,7 @@ class ScoreHandler {
         map < string, seq > sequences;
         string currentSeq;
         noteEvent offsetNEIndex(noteEvent nE, double off);
-
+        void buildScore();
 };
 
 #endif

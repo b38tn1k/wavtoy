@@ -29,9 +29,9 @@ Meta::Meta(WINDOW *scr){
     dontQuit = true;
     centerString("Welcome to the Wavtoy Composition Tool.");
     
-    sT.addCol(false, 0, 10);
-    const char* cs[] = {"TYPE", "ATTACK", "DECAY", "AMPLITUDE", "DURATION", "F.GAIN", "H.BAL", "OCT.COUNT"};
-    vector<string> s(cs, cs+8);
+    sT.addCol(false, 0, 12);
+    const char* cs[] = {"TYPE", "ATTACK", "DECAY", "AMPLITUDE", "DURATION", "F.GAIN", "H.BAL", "OCT.COUNT", "FX"};
+    vector<string> s(cs, cs+9);
     populateColumn(0, sT, s);
 
     iT.addCol(false, 0, 10);
@@ -138,9 +138,9 @@ void Meta::idleUpdate(char c) {
 
 void Meta::tableViewDraw(Ctable & table){
     table.draw(getmaxy(stdscr), vcy);
-    for (int i = 1; i < table.table.size(); i++) {
-        drawVerticallLine(10 * i);
-    }
+    // for (int i = 1; i < table.table.size(); i++) {
+    //     drawVerticallLine(10 * i);
+    // }
 }
 
 void Meta::tableViewUpdate(char c, Ctable & table) {
@@ -179,7 +179,7 @@ void Meta::tableViewUpdate(char c, Ctable & table) {
             break;
     }
     if (leave == false) {
-        cmdMSG = baseMSG + " " + table.getEntry(cx, cy + vcy);
+        cmdMSG = baseMSG + " " + table.getEntry(cx+1, cy + vcy);
     }
 }
 
@@ -272,25 +272,32 @@ void Meta::attachScore(ScoreHandler scr){
     int width = 10;
     for (vector < vector <string> >::iterator i = score.instrumentStrings.begin(); i != score.instrumentStrings.end(); ++ i){
         sT.addCol(true, startx, width);
+        int depthCounter = 0;
         for (vector <string> ::iterator j = i->begin(); j != i->end(); ++j){
             sT.addRow(col, *j);
+            depthCounter++;
         }
         startx += (width);
         col++;
     }
-    startx = 0;
+    sT.eveniseColumns();
+    nT.addCol(false, 0, 5);
+    startx = 4;
     for (int i = 0; i < score.instrumentStrings.size(); i++){
         nT.addCol(true, startx+1, width);
         startx += (width);
     }
     
+    int count = 0;
     for (vector < vector <string> >::iterator i = score.scoreStrings.begin(); i != score.scoreStrings.end(); ++ i){
-        col = 0;
+        col = 1;
         if (i->size() > 0) {
             for (vector <string> ::iterator j = i->begin(); j != i->end(); ++j){
                 nT.addRow(col, string(*j));
                 col++;
             }
+            nT.addRow(0, to_string(count));
+            count++;
         }
     }
 

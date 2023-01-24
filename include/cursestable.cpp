@@ -41,8 +41,16 @@ void Ctable::draw(int maxy, int virtCursor, int startX, int startY){
             if (y >= 0) {
                 move(y, x);
                 printString(string(i->width, ' ')); //clear?
-                move(y, x);
+                move(y, x+1);
                 printString(*str);
+                if (i->editable == true) {
+                    move(y, x + i->width - 1);
+                    printString("|");
+                } else {
+                    move(y, x + i->width - 2);
+                    printString("||");
+                }
+                
             }
             y += 1;
             if (y == maxy) {
@@ -53,16 +61,16 @@ void Ctable::draw(int maxy, int virtCursor, int startX, int startY){
 }
 
 string Ctable::getEntry(int x, int y) {
-    string result = " ";
+    string result = "";
     for (vector < column > :: iterator col = table.begin(); col != table.end(); ++col){
-        if (x > col->x && x < (col->x + col->width)) {
+        if (x >= col->x && x <= (col->x + col->width)) {
             if (y < col->data.size()) {
                 result += col->data[y];
                 break;
             }
         }
     }
-    return "[" + result + "] ";
+    return "[ " + result + " ] ";
 }
 
 void Ctable::printString(string myStr){ //duplicate, why cant I do this?
@@ -70,4 +78,19 @@ void Ctable::printString(string myStr){ //duplicate, why cant I do this?
     copy(myStr.begin(), myStr.end(), myChar);
     myChar[myStr.length()] = '\0';
     printw(myChar);
+}
+
+void Ctable::eveniseColumns(){
+    int maxDepth = 0;
+    for (vector < column > :: iterator col = table.begin(); col != table.end(); ++col){
+        if (col->data.size() > maxDepth) {
+            maxDepth = col->data.size();
+        }
+    }
+
+    for (vector < column > :: iterator col = table.begin(); col != table.end(); ++col){
+        while (col->data.size() < maxDepth) {
+            col->data.push_back("");
+        }
+    }
 }

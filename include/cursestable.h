@@ -29,6 +29,7 @@ class Ctable {
         void setData(int col, int row, string data);
         int maxHeight();
         string getEntry(int x, int y);
+        void eveniseColumns();
     private:
         void printString(string myStr); //duplicate, weird
 };

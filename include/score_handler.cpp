@@ -49,6 +49,10 @@ ScoreHandler::ScoreHandler(string filename){
         cleanScoreForEditor(lines[i]);
     }
     sequences[currentSeq].length = length;
+    buildScore();
+}
+
+void ScoreHandler::buildScore() {
     double sIndex = 0.0;
     vector < noteEvent > tempScore;
     for (vector < vector <string> > :: iterator j = structureStrings.begin(); j != structureStrings.end(); ++j){
@@ -137,6 +141,9 @@ int ScoreHandler::readHead(vector<string> lines){
             notationBegin = j;
             string fxIndex = to_string(instrumentStrings.size()-1);
             vector <string> fxString = splitStringOnSpace(string(*it));
+            // hacky
+            instrumentStrings[stoi(fxIndex)].insert(instrumentStrings[stoi(fxIndex)].end(), fxString.begin(),fxString.end());
+            // hacky
             fxString[0] = fxIndex;
             fxStrings.push_back(fxString);
         }
@@ -154,7 +161,7 @@ int ScoreHandler::readHead(vector<string> lines){
             notationBegin = j;
         }
     }
-    return notationBegin;
+    return notationBegin + 1;
 }
 
 void ScoreHandler::makeNoteMap() {
