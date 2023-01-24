@@ -179,7 +179,7 @@ void Meta::tableViewUpdate(char c, Ctable & table) {
             break;
     }
     if (leave == false) {
-        cmdMSG = baseMSG + " " + table.getEntry(cx, cy);
+        cmdMSG = baseMSG + " " + table.getEntry(cx, cy + vcy);
     }
 }
 
