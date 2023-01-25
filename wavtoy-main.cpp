@@ -17,6 +17,22 @@
 
 using namespace std;
 
+void modEcho(vector<double> & b, double decay, double time, double lfoFreq, double lfoAmp, int sR) {
+    double invDecay = 1.0 - decay;
+    time *= sR;
+    int n = 0;
+    double LFO = 0;
+    double current = 0;
+    for(vector<double>::iterator it = begin(b); it != end(b); ++it){
+        LFO = lfoAmp * sin( (TWO_PI * n * lfoFreq) / sR );
+        current = int(LFO * time);
+        if ((it - begin(b)> current) && (it - current < end(b))) {
+            *it = invDecay * (*it) + decay * (*(it-current));
+        }
+        n++;
+    }
+}
+
 void echo(vector<double> & b, double decay, double time, int sR) {
     double invDecay = 1.0 - decay;
     time *= sR;
@@ -205,6 +221,9 @@ int main(int argc, char *argv[]){
                 }
                 if (tempFX[1].find("FUZZ") != -1) {
                     fuzz(tempB, stof(tempFX[2]), stof(tempFX[3]));
+                }
+                if (tempFX[1].find("MOD") != -1) {
+                    modEcho(tempB, stof(tempFX[2]), stof(tempFX[3]), stof(tempFX[4]), stof(tempFX[5]), wav.sampleRate);
                 }
             }
         }
