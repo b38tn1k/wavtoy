@@ -32,16 +32,17 @@ Wavtoy Theme
 #       - KICK, a sweeping pitch drop sin wave.
 #               * Attack: pitch drop duration
 #               * Octave Count: starting pitch above fundamental
+#               * Harmonic Balance: hijacked to control white noise mix, low values reccomended
 #       - NOISE, a noise + fundamental tone that can sound like a snare, hat, cymbal
 #       - SYNTH, a simple additive synth
 # Arguments in order:
-#   - Attack as a % of Duration
-#   - Decay as a % of Duration
-#   - Amplitude as a % of Max Render Amplitude
+#   - Attack as a [0.0, 1.0] % of Duration
+#   - Decay as a [0.0, 1.0] % of Duration
+#   - Amplitude as a [0.0, 1.0] %
 #   - Duration in seconds
-#   - Fundamental Gain: Amplitude of Fundamental Frequency Sine Wave
-#   - Harmonic Balance: Amplitude balance of odd vs even Harmonics
-#   - Octave Count: Number of additional harmonics (octaves only)
+#   - Fundamental Gain: Amplitude of Fundamental Frequency Sine Wave [0.0, 1.0] 
+#   - Harmonic Balance: Amplitude balance of odd vs even Harmonics [0.0, 1.0] 
+#   - Octave Count: Number (int) of additional harmonics (octaves only)
 
 # You can add multiple synths, with effects for each synth applied below each synth.
 # Effects include:

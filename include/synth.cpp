@@ -63,11 +63,12 @@ double Synth::noiseOsc(int n, double frequency) {
 double Synth::swoopOsc(int n, double frequency) {
     double mult = 1.0;
     double pitch = frequency;
+    double random = (rand() % 100)/100.0;
     if (n <= attackInSamples/2) {
         mult -= attackIncrement * n;
         pitch  = (harmonicCount * frequency * mult);
     }
-    double value = fundamentalGain * sinSample(n, pitch, sampleRate);
+    double value = fundamentalGain * (sinSample(n, pitch, sampleRate) + harmonicBalance * random);
     return value;
 }
 

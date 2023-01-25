@@ -90,7 +90,7 @@ void wavefold(vector<double> & b, double L) {
     }
 }
 
-void haas(vector<double> & b, int interval) {
+void haas(vector<double> & b, int interval) { // aim for about 10ms = 441 samples a 44.1k
     for (int i = 0; i < b.size() - (interval + 1); i++) {
         if (i % 2 == 0) {
             b[i] = b[i + interval];
@@ -105,6 +105,29 @@ void logInst(vector<noteEvent>::iterator i, int index, vector<int> & buffer){
     cout << "freq\t" << i->frequency << endl;
     cout << "index\t" << index << endl;
     cout << "buffer size\t" << buffer.size() << endl;
+}
+
+void normalise(vector<double> & b) {
+    double mA = getMinMax(b);
+    double gain = 0.999999/mA;
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        *i *= gain;
+
+    }
+}
+
+void logistic(vector<double> & b, double k) {
+    double pregain = getMinMax(b);
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        double temp = abs(*i);
+        double sign = temp / *i;
+        temp = (1.0) / (1.0 + exp(-k * (temp - 0.5)));
+        *i = (0.99 * *i) + 0.01*(temp * sign);
+    }
+    double gainScale = getMinMax(b) / pregain;
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        *i /= gainScale;
+    }
 }
 
 int main(int argc, char *argv[]){
@@ -178,6 +201,9 @@ int main(int argc, char *argv[]){
                 if (tempFX[1].find("HAAS") != -1) {
                     haas(tempB, stoi(tempFX[2]));
                 }
+                // if (tempFX[1].find("FUZZ") != -1) {
+                //     logistic(tempB, stoi(tempFX[2])); // broken
+                // }
             }
         }
         j++;
@@ -185,6 +211,7 @@ int main(int argc, char *argv[]){
             buffer[i] += tempB[i];
         }
     }
+    normalise(buffer);
     wav.writeBuffer(buffer);
     wav.closeWav();
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
