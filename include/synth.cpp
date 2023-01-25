@@ -106,8 +106,8 @@ vector <double> Synth::synthesise(double frequency){
         //amp
         value *= env;
         // write to temp buffer
-        // tempBuffer.push_back(value * MAX_AMP * amplitude);
-        tempBuffer.push_back(value * amplitude);
+        tempBuffer.push_back(0.0);
+        tempBuffer[n] = value * amplitude;
     }
     return tempBuffer;
 }

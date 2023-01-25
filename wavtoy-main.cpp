@@ -17,6 +17,12 @@
 
 using namespace std;
 
+void addNoiseFloor(vector<double> & b, double range){
+    for(vector<double>::iterator it = begin(b); it != end(b); ++it){
+        *it = *it + (((rand() % 1000000)/500000.0) - 1.0) * range;
+    }
+}
+
 void LFO(vector<double> & b, double lfoFreq, double lfoAmp, int sR) {
     int n = 0;
     double LFO = 0;
@@ -25,7 +31,6 @@ void LFO(vector<double> & b, double lfoFreq, double lfoAmp, int sR) {
         *it *= LFO;
         n++;
     }
-
 }
 
 void modEcho(vector<double> & b, double decay, double time, double lfoFreq, double lfoAmp, int sR) {
@@ -49,7 +54,9 @@ void echo(vector<double> & b, double decay, double time, int sR) {
     time *= sR;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
         if (it - begin(b)> time) {
-            *it = invDecay * (*it) + decay * (*(it-time));
+            if (*(it - time) != 0.0) {
+                *it = invDecay * (*it) + decay * (*(it-time));
+            }
         }
     }
 }
@@ -159,6 +166,62 @@ void fuzz(vector<double> & b, double k, double mix) {
     }
 }
 
+void overdrive(vector<double> & b, double thresh, double mix){
+    double pregain = getMinMax(b);
+    normalise(b);
+    for(vector<double>::iterator it = begin(b); it != end(b); ++it){
+        double temp = *it;
+        if (abs(*it) < thresh){
+            temp = 2 * *it;
+        }
+        if (abs(*it) >= thresh){
+            double mv = 2 - (3 * *it) * (3 * *it);
+            if (*it > 0) {
+                temp = 3 - (mv/3);
+            }
+            if (*it < 0) {
+                temp = -1 * (3 - (mv/3));
+            }
+        }
+        *it = (1.0 - mix) * *it + mix * temp;
+    }
+    double postgain = getMinMax(b);
+    double attenuate = pregain / postgain;
+
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        *i *= attenuate;
+    }
+}
+
+double mod (double n, double d) {
+  n = fmod(n, d);
+  if (n<0) n += d;
+  return n;
+}
+
+void distort(vector<double> & b, double gain, double mix, int mode){
+    for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
+        double temp = *i;
+        switch (mode) {
+            case 1: 
+                temp = sin(gain * *i);
+                break;
+            case 2: 
+                temp = abs(mod(2*gain * *i +2,4)-2)-1;
+                break;
+            case 3: 
+                temp = mod(gain* *i +1,2)-1;
+                break;
+            case 4: 
+                temp = 2 * *i * *i;
+                break;
+            default:
+                break;
+        }
+        *i = (1.0 - mix) * *i + mix * temp;
+    }
+}
+
 int main(int argc, char *argv[]){
     if (argc < 2) {
         cout << "Specify input file" << endl;
@@ -239,14 +302,21 @@ int main(int argc, char *argv[]){
                 if (tempFX[1].find("LFO") != -1) {
                     LFO(tempB, stof(tempFX[2]), stof(tempFX[3]), wav.sampleRate);
                 }
+                if (tempFX[1].find("OVD") != -1) {
+                    overdrive(tempB, stof(tempFX[2]), stof(tempFX[3]));
+                }
+                if (tempFX[1].find("DIST") != -1) {
+                    distort(tempB, stof(tempFX[2]), stof(tempFX[3]), stof(tempFX[4]));
+                }
             }
         }
         j++;
         for (int i = 0; i < tempB.size(); i++) {
-            buffer[i] += tempB[i];
+            buffer[i] += double(tempB[i]);
         }
     }
     normalise(buffer);
+    addNoiseFloor(buffer, 0.001);
     wav.writeBuffer(buffer);
     wav.closeWav();
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
