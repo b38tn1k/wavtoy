@@ -90,6 +90,14 @@ void wavefold(vector<double> & b, double L) {
     }
 }
 
+void haas(vector<double> & b, int interval) {
+    for (int i = 0; i < b.size() - (interval + 1); i++) {
+        if (i % 2 == 0) {
+            b[i] = b[i + interval];
+        }
+    }
+}
+
 void logInst(vector<noteEvent>::iterator i, int index, vector<int> & buffer){
     cout << "new note: index\t"<< i->beatIndex << endl;
     cout << "inst\t" << i->instrument << endl;
@@ -166,6 +174,9 @@ int main(int argc, char *argv[]){
                 }
                 if (tempFX[1].find("MULT") != -1) {
                     mult(tempB, stof(tempFX[2]));
+                }
+                if (tempFX[1].find("HAAS") != -1) {
+                    haas(tempB, stoi(tempFX[2]));
                 }
             }
         }
