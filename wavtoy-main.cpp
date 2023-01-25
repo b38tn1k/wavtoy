@@ -116,17 +116,19 @@ void normalise(vector<double> & b) {
     }
 }
 
-void logistic(vector<double> & b, double k) {
+void fuzz(vector<double> & b, double k, double mix) {
     double pregain = getMinMax(b);
+    normalise(b);
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        double temp = abs(*i);
-        double sign = temp / *i;
-        temp = (1.0) / (1.0 + exp(-k * (temp - 0.5)));
-        *i = (0.99 * *i) + 0.01*(temp * sign);
+        int sign = *i / abs(*i);
+        sign = min(1, sign);
+        sign = max(-1, sign);
+        double fz = sign * (1 - exp (k * sign * *i));
+        *i = ((1.0 - mix) * *i) + mix *(fz);
     }
-    double gainScale = getMinMax(b) / pregain;
+    normalise(b);
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i /= gainScale;
+        *i *= pregain;
     }
 }
 
@@ -201,9 +203,9 @@ int main(int argc, char *argv[]){
                 if (tempFX[1].find("HAAS") != -1) {
                     haas(tempB, stoi(tempFX[2]));
                 }
-                // if (tempFX[1].find("FUZZ") != -1) {
-                //     logistic(tempB, stoi(tempFX[2])); // broken
-                // }
+                if (tempFX[1].find("FUZZ") != -1) {
+                    fuzz(tempB, stof(tempFX[2]), stof(tempFX[3]));
+                }
             }
         }
         j++;
