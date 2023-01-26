@@ -68,7 +68,7 @@ void Effects::addNoiseFloor(vector<double> & b, double range){
     }
 }
 
-double procLFO (double value, int accum, vector<double> params, int sR) {
+double Effects::procLFO (double value, int accum, vector<double> params, int sR) {
     double LFO = params[1] * sin( (TWO_PI * accum * params[0]) / sR );
     return value * LFO;
 }
@@ -78,12 +78,12 @@ void Effects::LFO(vector<double> & b, vector<double> params) {
     // double lfoAmp = params[1];
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = procLFO(*it, n, params, sR);
+        *it = Effects::procLFO(*it, n, params, sR);
         n++;
     }
 }
 
-double procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
+double Effects::procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double LFO = params[3] * sin( (TWO_PI * accum * params[2]) / sR );
     int current = int(LFO * params[1] * sR);
     if ((accum > current) && ((accum - current) < bT.size() )) {
@@ -100,12 +100,12 @@ void Effects::modEcho(vector<double> & b, vector<double> params) {
     // double lfoAmp  = params[3];
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = procModEcho(b, *it, n, params, sR);
+        *it = Effects::procModEcho(b, *it, n, params, sR);
         n++;
     }
 }
 
-double procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
+double Effects::procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     if (accum > params[1] * sR) {
         if (bT[accum - params[1] * sR] != 0.0) {
             value = (1.0 - params[0]) * (value) + params[0] * bT[accum - params[1] * sR];
@@ -121,19 +121,19 @@ void Effects::echo(vector<double> & b, vector<double> params) {
     // double invDecay = 1.0 - decay;
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = procEcho(b, *it, n, params, sR);
+        *it = Effects::procEcho(b, *it, n, params, sR);
         n++;
     }
 }
 
-double procHPF(vector<double> & bT, double value, int accum, vector<double> params){
+double Effects::procHPF(vector<double> & bT, double value, int accum, vector<double> params){
     if (accum >= 1) {
         value -= ((1.0 - params[0]) * bT[accum] +  params[0] * bT[accum-1]);
     }
     return value;
 }
 
-double procLPF(vector<double> & bT, double value, int accum, vector<double> params){
+double Effects::procLPF(vector<double> & bT, double value, int accum, vector<double> params){
     if (accum >= 1) {
         value = (params[0] * bT[accum] + (1.0 - params[0]) * bT[accum-1]);
     }
@@ -144,9 +144,9 @@ void Effects::filter(vector<double> & b, vector<double> params, bool isHPF) {
     // double K = params[0];
     for (int i = 1; i < b.size(); i++) {
         if (isHPF == true) {
-            b[i] = procHPF(b, b[i], i, params);
+            b[i] = Effects::procHPF(b, b[i], i, params);
         } else {
-            b[i] = procLPF(b, b[i], i, params);
+            b[i] = Effects::procLPF(b, b[i], i, params);
         }
     }
 }
@@ -162,7 +162,7 @@ double Effects::getMinMax(vector<double> & bT) {
     return minmax;
 }
 
-double procCrush(double value, vector<double> params) {
+double Effects::procCrush(double value, vector<double> params) {
     return (floor(value * params[0]))/params[0];
 }
 
@@ -170,11 +170,11 @@ double procCrush(double value, vector<double> params) {
 void Effects::crush(vector<double> & b, vector<double> params) {
     // int bitz = params[0];
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i = procCrush(*i, params);
+        *i = Effects::procCrush(*i, params);
     }
 }
 
-double procWavefold(double value, vector<double> params) {
+double Effects::procWavefold(double value, vector<double> params) {
     double uthresh = params[0];
     double lthresh = params[0] * -1;
     if (value > uthresh) {
@@ -192,17 +192,24 @@ double procWavefold(double value, vector<double> params) {
 // void Effects::wavefold(vector<double> & b,double L) {
 void Effects::wavefold(vector<double> & b, vector<double> params) {
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i = procWavefold(*i, params);
+        *i = Effects::procWavefold(*i, params);
     }
+}
+
+double Effects::procHaas(vector<double> & bT, double value, int accum, vector<double> params){
+    if (accum % 2 == 0 && accum < bT.size() - (params[0] + 1)) {
+            value = bT[accum + int(params[0])];
+    } else {
+        value = bT[accum];
+    }
+    return value;
 }
 
 // void Effects::haas(vector<double> & b,int interval) { // aim for about 10ms = 441 samples a 44.1k
 void Effects::haas(vector<double> & b, vector<double> params) { // aim for about 10ms = 441 samples a 44.1k
-    int interval = params[0];
-    for (int i = 0; i < b.size() - (interval + 1); i++) {
-        if (i % 2 == 0) {
-            b[i] = b[i + interval];
-        }
+    // int interval = params[0];
+    for (int i = 0; i < b.size(); i++) {
+        b[i] = Effects::procHaas(b, b[i], i, params);
     }
 }
 
@@ -214,22 +221,28 @@ void Effects::normalise(vector<double> & bT) {
     }
 }
 
+double Effects::procFuzz(double value, vector<double> params){
+    int sign = value / abs(value);
+    sign = min(1, sign);
+    sign = max(-1, sign);
+    double fz = sign * (1 - exp (params[0] * sign * value));
+    value = ((1.0 - params[1]) * value) + params[1] *(fz);
+    return value;
+}
+
 // void Effects::fuzz(vector<double> & b,double k, double mix) {
 void Effects::fuzz(vector<double> & b, vector<double> params) {
-    double k = params[0];
-    double mix = params[1];
+    // double k = params[0];
+    // double mix = params[1];
     double pregain = 0;
     double postgain = 0;
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
         if (abs(*i) > pregain) {
             pregain = abs(*i);
         }
-        int sign = *i / abs(*i);
-        sign = min(1, sign);
-        sign = max(-1, sign);
 
-        double fz = sign * (1 - exp (k * sign * *i));
-        *i = ((1.0 - mix) * *i) + mix *(fz);
+        *i = Effects::procFuzz(*i, params);
+
         if (abs(*i) > postgain) {
             postgain = abs(*i);
         }
@@ -240,30 +253,37 @@ void Effects::fuzz(vector<double> & b, vector<double> params) {
     }
 }
 
+double Effects::procOverdrive(double value, vector<double> params){
+    double temp = value;
+    if (abs(value) < params[0]){
+        temp = 2 * value;
+    }
+    if (abs(value) >= params[0]){
+        double mv = 2 - (3 * value) * (3 * value);
+        if (value > 0) {
+            temp = 3 - (mv/3);
+        }
+        if (value < 0) {
+            temp = -1 * (3 - (mv/3));
+        }
+    }
+    value = (1.0 - params[1]) * value + params[1] * temp;
+    return value;
+}
+
 // void Effects::overdrive(vector<double> & b,double thresh, double mix){
 void Effects::overdrive(vector<double> & b, vector<double> params){
-    double thresh = params[0];
-    double mix = params[1];
+    // double thresh = params[0];
+    // double mix = params[1];
     double pregain = 0;
     double postgain = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
         if (abs(*it) > pregain) {
             pregain = abs(*it);
         }
-        double temp = *it;
-        if (abs(*it) < thresh){
-            temp = 2 * *it;
-        }
-        if (abs(*it) >= thresh){
-            double mv = 2 - (3 * *it) * (3 * *it);
-            if (*it > 0) {
-                temp = 3 - (mv/3);
-            }
-            if (*it < 0) {
-                temp = -1 * (3 - (mv/3));
-            }
-        }
-        *it = (1.0 - mix) * *it + mix * temp;
+
+        *it = Effects::procOverdrive(*it, params);
+
         if (abs(*it) > postgain) {
             postgain = abs(*it);
         }
@@ -281,29 +301,35 @@ double Effects::mod(double n, double d) {
   return n;
 }
 
+double Effects::procDistort(double value, vector<double> params){
+    double temp = value;
+    int mode = int(params[2]);
+    switch (mode) {
+        case 1: 
+            temp = sin(params[0] * value);
+            break;
+        case 2: 
+            temp = abs(mod(2*params[0] * value +2,4)-2)-1;
+            break;
+        case 3: 
+            temp = mod(params[0]* value +1,2)-1;
+            break;
+        case 4: 
+            temp = 2 * value * value;
+            break;
+        default:
+            break;
+    }
+    value = (1.0 - params[1]) * value + params[1] * temp;
+    return value;
+}
+
 // void Effects::distort(vector<double> & b,double gain, double mix, int mode){
 void Effects::distort(vector<double> & b, vector<double> params){
-    double gain = params[0];
-    double mix  = params[1];
-    int mode = params[2];
+    // double gain = params[0];
+    // double mix  = params[1];
+    // int mode = params[2];
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        double temp = *i;
-        switch (mode) {
-            case 1: 
-                temp = sin(gain * *i);
-                break;
-            case 2: 
-                temp = abs(mod(2*gain * *i +2,4)-2)-1;
-                break;
-            case 3: 
-                temp = mod(gain* *i +1,2)-1;
-                break;
-            case 4: 
-                temp = 2 * *i * *i;
-                break;
-            default:
-                break;
-        }
-        *i = (1.0 - mix) * *i + mix * temp;
+        *i = Effects::procDistort(*i, params);
     }
 }

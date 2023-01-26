@@ -19,10 +19,10 @@ class Effects {
     public:
         Effects(int sampleRate);
         double getMinMax(vector<double> & bT);
-        double mod(double n, double d);
         void applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int index);
         void normalise(vector<double> & bT);
         void addNoiseFloor(vector<double> & b, double range);
+        double mod(double n, double d);
 
         void LFO(vector<double> & b, vector<double> params);
         void modEcho(vector<double> & b, vector<double> params);
@@ -34,6 +34,23 @@ class Effects {
         void fuzz(vector<double> & b, vector<double> params);
         void overdrive(vector<double> & b, vector<double> params);
         void distort(vector<double> & b, vector<double> params);
+
+        double procLFO (double value, int accum, vector<double> params, int sR);
+        double procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procHPF(vector<double> & bT, double value, int accum, vector<double> params);
+        double procLPF(vector<double> & bT, double value, int accum, vector<double> params);
+        double procCrush(double value, vector<double> params);
+        double procWavefold(double value, vector<double> params);
+        double procHaas(vector<double> & bT, double value, int accum, vector<double> params);
+        double procFuzz(double value, vector<double> params);
+        double procOverdrive(double value, vector<double> params);
+        double procDistort(double value, vector<double> params);
+
+
+
+
+
 
         void printTimes();
     private:
