@@ -3,10 +3,62 @@
 Effects::Effects(int sampleRate){
     sR = sampleRate;
 }
+//procLFO
+// param[2] = params[0] / sR
+
+// procModEcho
+// param[4] = params[2] / sR
+// param[5] = params[1] * sR
+// param[6] = 1.0 - params[0]
+
+//procEcho
+// param[2] = 1.0 - param[0]
+
+//procWavefold
+//params[1] = -1 * params[0]
+//params[2] = 1.0 +  params[0]
+
+//procFuzz
+//params[2] = 1.0 - params[1]
+
+//proceOverdrive
+//params[2] = 1.0 - params[1]
+
+//procDist
+// params[3] = 1.0 - params[1]
+
+void Effects::doPreMath(vector< fx> & fxInstance) {
+    for (vector< fx>::iterator it = fxInstance.begin(); it != fxInstance.end(); ++it){
+                if (it->type.find("ECHO") != -1) {
+                    it->params.push_back(1.0 - it->params[0]);
+                } else if (it->type.find("LPF") != -1) {
+                } else if (it->type.find("HPF") != -1) {
+                } else if (it->type.find("FOLD") != -1) {
+                    it->params.push_back( -1 * it->params[0]);
+                    it->params.push_back(1.0 +  it->params[0]);
+                } else if (it->type.find("CRUSH") != -1) {
+                } else if (it->type.find("HAAS") != -1) {
+                } else if (it->type.find("FUZZ") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                } else if (it->type.find("MOD") != -1) {
+                    it->params.push_back (it->params[2] / sR);
+                    it->params.push_back (it->params[1] * sR);
+                    it->params.push_back (1.0 - it->params[0]);
+                } else if (it->type.find("LFO") != -1) {
+                    it->params.push_back (it->params[0] / sR);
+                } else if (it->type.find("OVD") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                } else if (it->type.find("DIST") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                }
+            }
+
+}
 
 void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int index){
     cout << to_string(index) << endl;
     if (fxMap.find(index) != fxMap.end()){
+        doPreMath(fxMap[index]);
         int accum = 0;
         double pregain = 0.0;
         double postgain = 0.0;
@@ -18,35 +70,25 @@ void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int in
             for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
                 if (it->type.find("ECHO") != -1) { // can't switch on string :-<
                     *i = procEcho(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("LPF") != -1) {
+                } else if (it->type.find("LPF") != -1) {
                     *i = procLPF(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("HPF") != -1) {
+                } else if (it->type.find("HPF") != -1) {
                     *i = procHPF(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("FOLD") != -1) {
+                } else if (it->type.find("FOLD") != -1) {
                     *i = procWavefold(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("CRUSH") != -1) {
+                } else if (it->type.find("CRUSH") != -1) {
                     *i = procCrush(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("HAAS") != -1) {
+                } else if (it->type.find("HAAS") != -1) {
                     *i = procHaas(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("FUZZ") != -1) {
+                } else if (it->type.find("FUZZ") != -1) {
                     *i = procFuzz(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("MOD") != -1) {
+                } else if (it->type.find("MOD") != -1) {
                     *i = procModEcho(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("LFO") != -1) {
+                } else if (it->type.find("LFO") != -1) {
                     *i = procLFO (bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("OVD") != -1) {
+                } else if (it->type.find("OVD") != -1) {
                     *i = procOverdrive(bT, *i, accum, it->params, sR);
-                }
-                if (it->type.find("DIST") != -1) {
+                } else if (it->type.find("DIST") != -1) {
                     *i = procDistort(bT, *i, accum, it->params, sR);
                 }
             }
@@ -82,18 +124,17 @@ double Effects::procLFO (vector<double> & bT, double value, int accum, vector<do
 
 double Effects::procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double LFO = params[3] * sin( (TWO_PI * accum * params[2]) / sR );
-    int current = int(LFO * params[1] * sR);
+    int current = int(LFO * params[5]);
     if ((accum > current) && ((accum - current) < bT.size() )) {
-        value = (1.- params[0]) * (value) + params[0] * (bT[accum-current]);
+        value = (params[6]) * (value) + params[0] * (bT[accum-current]);
     }
     return value;
-
 }
 
 double Effects::procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     if (accum > params[1] * sR) {
         if (bT[accum - params[1] * sR] != 0.0) {
-            value = (1.0 - params[0]) * (value) + params[0] * bT[accum - params[1] * sR];
+            value = (params[2]) * (value) + params[0] * bT[accum - params[1] * sR];
         }
     }
     return value;
@@ -124,13 +165,15 @@ double Effects::getMinMax(vector<double> & bT) {
     return minmax;
 }
 
+
 double Effects::procCrush(vector<double> & bT, double value, int accum, vector<double> params, int sR) {
     return (floor(value * params[0]))/params[0];
 }
 
+
 double Effects::procWavefold(vector<double> & bT, double value, int accum, vector<double> params, int sR) {
     double uthresh = params[0];
-    double lthresh = params[0] * -1;
+    double lthresh = params[1];
     if (value > uthresh) {
             double delta = value - uthresh;
             value = uthresh - delta;
@@ -138,7 +181,7 @@ double Effects::procWavefold(vector<double> & bT, double value, int accum, vecto
             double delta = value - lthresh;
             value = lthresh - delta;
         }
-    value *= (1.0 + params[0]);
+    value *= (params[2]);
     return value;
 
 }
@@ -165,9 +208,10 @@ double Effects::procFuzz(vector<double> & bT, double value, int accum, vector<do
     sign = min(1, sign);
     sign = max(-1, sign);
     double fz = sign * (1 - exp (params[0] * sign * value));
-    value = ((1.0 - params[1]) * value) + params[1] *(fz);
+    value = ((params[2]) * value) + params[1] *(fz);
     return value;
 }
+
 
 double Effects::procOverdrive(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double temp = value;
@@ -183,7 +227,7 @@ double Effects::procOverdrive(vector<double> & bT, double value, int accum, vect
             temp = -1 * (3 - (mv/3));
         }
     }
-    value = (1.0 - params[1]) * value + params[1] * temp;
+    value = (params[2]) * value + params[1] * temp;
     return value;
 }
 
@@ -212,6 +256,6 @@ double Effects::procDistort(vector<double> & bT, double value, int accum, vector
         default:
             break;
     }
-    value = (1.0 - params[1]) * value + params[1] * temp;
+    value = (params[3]) * value + params[1] * temp;
     return value;
 }

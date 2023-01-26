@@ -23,6 +23,7 @@ class Effects {
         void normalise(vector<double> & bT);
         void addNoiseFloor(vector<double> & b, double range);
         double mod(double n, double d);
+        void doPreMath(vector< fx> & fxInstance);
 
         double procLFO(vector<double> & bT, double value, int accum, vector<double> params, int sR);
         double procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR);
