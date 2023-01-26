@@ -46,16 +46,23 @@ class Effects {
         double procFuzz(double value, vector<double> params);
         double procOverdrive(double value, vector<double> params);
         double procDistort(double value, vector<double> params);
-
-
-
-
-
-
         void printTimes();
     private:
         int sR;
         map <string, vector <int> > timers;
 
 };
+
+// class Effect {
+//     public:
+//         int sR;
+//         vector<double> params;
+//         vector<double> invParams;
+//         vector<double> bT;
+
+//         Effect(){};
+
+
+// };
+
 #endif

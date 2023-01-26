@@ -96,7 +96,6 @@ int main(int argc, char *argv[]){
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
     auto stopM = high_resolution_clock::now();
     auto durationM = duration_cast<microseconds>(stopM - startM);
-    cout << "Processing Time: " << durationM.count() << " microseconds" << endl;
-    fx.printTimes();
+    cout << "Processing Time: " << durationM.count()/1000000.0 << " seconds" << endl;
     return 0;
 }

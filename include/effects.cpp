@@ -5,47 +5,110 @@ Effects::Effects(int sampleRate){
 }
 
 void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int index){
+    cout << to_string(index) << endl;
     if (fxMap.find(index) != fxMap.end()){
-        for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
-            auto start = high_resolution_clock::now();
-            if (it->type.find("ECHO") != -1) { // can't switch on string :-<
-                echo(bT, it->params);
+        int accum = 0;
+        double pregain = 0.0;
+        double postgain = 0.0;
+        auto start = high_resolution_clock::now();
+        for(vector<double>::iterator i = begin(bT); i != end(bT); ++i){
+            if (abs(*i) > pregain) {
+                pregain = abs(*i);
             }
-            if (it->type.find("LPF") != -1) {
-                filter(bT, it->params, false);
+            for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
+                if (it->type.find("ECHO") != -1) { // can't switch on string :-<
+                    *i = procEcho(bT, *i, accum, it->params, sR);
+                }
+                if (it->type.find("LPF") != -1) {
+                    *i = procLPF(bT, *i, accum, it->params);
+                }
+                if (it->type.find("HPF") != -1) {
+                    *i = procHPF(bT, *i, accum, it->params);
+                }
+                if (it->type.find("FOLD") != -1) {
+                    *i = procWavefold(*i, it->params);
+                }
+                if (it->type.find("CRUSH") != -1) {
+                    *i = procCrush(*i, it->params);
+                }
+                if (it->type.find("HAAS") != -1) {
+                    *i = procHaas(bT, *i, accum, it->params);
+                }
+                if (it->type.find("FUZZ") != -1) {
+                    *i = procFuzz(*i, it->params);
+                }
+                if (it->type.find("MOD") != -1) {
+                    *i = procModEcho(bT, *i, accum, it->params, sR);
+                }
+                if (it->type.find("LFO") != -1) {
+                    *i = procLFO (*i, accum, it->params, sR);
+                }
+                if (it->type.find("OVD") != -1) {
+                    *i = procOverdrive(*i, it->params);
+                }
+                if (it->type.find("DIST") != -1) {
+                    *i = procDistort(*i, it->params);
+                }
             }
-            if (it->type.find("HPF") != -1) {
-                filter(bT, it->params, true);
+            if (abs(*i) > postgain) {
+                postgain = abs(*i);
             }
-            if (it->type.find("FOLD") != -1) {
-                wavefold(bT, it->params);
-            }
-            if (it->type.find("CRUSH") != -1) {
-                crush(bT, it->params);
-            }
-            if (it->type.find("HAAS") != -1) {
-                haas(bT, it->params);
-            }
-            if (it->type.find("FUZZ") != -1) {
-                fuzz(bT, it->params);
-            }
-            if (it->type.find("MOD") != -1) {
-                modEcho(bT, it->params);
-            }
-            if (it->type.find("LFO") != -1) {
-                LFO(bT, it->params);
-            }
-            if (it->type.find("OVD") != -1) {
-                overdrive(bT, it->params);
-            }
-            if (it->type.find("DIST") != -1) {
-                distort(bT, it->params);
-            }
-            auto stop = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds>(stop - start);
-            timers[it->type].push_back(int(duration.count()));
+            accum++;
         }
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        cout << "fx: " << duration.count()/1000000.0 << endl;
+        start = high_resolution_clock::now();
+        double attenuate = pregain / postgain;
+        for (vector <double>::iterator i = bT.begin(); i!= bT.end(); ++i) {
+            *i *= attenuate;
+        }
+        stop = high_resolution_clock::now();
+        duration = duration_cast<microseconds>(stop - start);
+        cout << "atten: " << duration.count()/1000000.0 << endl;
     }
+    // old V
+    // if (fxMap.find(index) != fxMap.end()){
+    //     for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
+    //         auto start = high_resolution_clock::now();
+    //         if (it->type.find("ECHO") != -1) { // can't switch on string :-<
+    //             echo(bT, it->params);
+    //         }
+    //         if (it->type.find("LPF") != -1) {
+    //             filter(bT, it->params, false);
+    //         }
+    //         if (it->type.find("HPF") != -1) {
+    //             filter(bT, it->params, true);
+    //         }
+    //         if (it->type.find("FOLD") != -1) {
+    //             wavefold(bT, it->params);
+    //         }
+    //         if (it->type.find("CRUSH") != -1) {
+    //             crush(bT, it->params);
+    //         }
+    //         if (it->type.find("HAAS") != -1) {
+    //             haas(bT, it->params);
+    //         }
+    //         if (it->type.find("FUZZ") != -1) {
+    //             fuzz(bT, it->params);
+    //         }
+    //         if (it->type.find("MOD") != -1) {
+    //             modEcho(bT, it->params);
+    //         }
+    //         if (it->type.find("LFO") != -1) {
+    //             LFO(bT, it->params);
+    //         }
+    //         if (it->type.find("OVD") != -1) {
+    //             overdrive(bT, it->params);
+    //         }
+    //         if (it->type.find("DIST") != -1) {
+    //             distort(bT, it->params);
+    //         }
+    //         auto stop = high_resolution_clock::now();
+    //         auto duration = duration_cast<microseconds>(stop - start);
+    //         timers[it->type].push_back(int(duration.count()));
+    //     }
+    // }
 }
 
 void Effects::printTimes(){
