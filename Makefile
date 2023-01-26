@@ -2,8 +2,8 @@ CC = g++
 CFLAGS1 = -Wall -g 
 TARGET1 = wavtoy
 TARGET2 = wavtoy-composer 
-OBJS1 = include/frequencies.h wav_handler.o timeline.o synth.o score_handler.o
-OBJFILES1 = wavtoy-main.o wav_handler.o timeline.o synth.o score_handler.o
+OBJS1 = include/frequencies.h wav_handler.o timeline.o synth.o score_handler.o effects.o
+OBJFILES1 = wavtoy-main.o wav_handler.o timeline.o synth.o score_handler.o effects.o
 CFLAGS2 = -Wall -g -lncurses
 TARGET2 = wavtoy-composer 
 OBJS2 = score_handler.o metahandler.o cursestable.o 
@@ -30,6 +30,9 @@ synth.o: include/synth.h include/synth.cpp
 
 score_handler.o: include/score_handler.h include/score_handler.cpp
 	$(CC) $(CFLAGS1) -c include/score_handler.cpp
+
+effects.o: include/effects.h include/effects.cpp
+	$(CC) $(CFLAGS1) -c include/effects.cpp
 
 wavtoy-composer-main.o: wavtoy-composer-main.cpp  $(OBJS2)
 	$(CC) $(CFLAGS1) -c wavtoy-composer-main.cpp $(OBJS2)
