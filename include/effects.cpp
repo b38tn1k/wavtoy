@@ -20,34 +20,34 @@ void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int in
                     *i = procEcho(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("LPF") != -1) {
-                    *i = procLPF(bT, *i, accum, it->params);
+                    *i = procLPF(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("HPF") != -1) {
-                    *i = procHPF(bT, *i, accum, it->params);
+                    *i = procHPF(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("FOLD") != -1) {
-                    *i = procWavefold(*i, it->params);
+                    *i = procWavefold(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("CRUSH") != -1) {
-                    *i = procCrush(*i, it->params);
+                    *i = procCrush(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("HAAS") != -1) {
-                    *i = procHaas(bT, *i, accum, it->params);
+                    *i = procHaas(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("FUZZ") != -1) {
-                    *i = procFuzz(*i, it->params);
+                    *i = procFuzz(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("MOD") != -1) {
                     *i = procModEcho(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("LFO") != -1) {
-                    *i = procLFO (*i, accum, it->params, sR);
+                    *i = procLFO (bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("OVD") != -1) {
-                    *i = procOverdrive(*i, it->params);
+                    *i = procOverdrive(bT, *i, accum, it->params, sR);
                 }
                 if (it->type.find("DIST") != -1) {
-                    *i = procDistort(*i, it->params);
+                    *i = procDistort(bT, *i, accum, it->params, sR);
                 }
             }
             if (abs(*i) > postgain) {
@@ -131,7 +131,7 @@ void Effects::addNoiseFloor(vector<double> & b, double range){
     }
 }
 
-double Effects::procLFO (double value, int accum, vector<double> params, int sR) {
+double Effects::procLFO (vector<double> & bT, double value, int accum, vector<double> params, int sR) {
     double LFO = params[1] * sin( (TWO_PI * accum * params[0]) / sR );
     return value * LFO;
 }
@@ -141,7 +141,7 @@ void Effects::LFO(vector<double> & b, vector<double> params) {
     // double lfoAmp = params[1];
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = Effects::procLFO(*it, n, params, sR);
+        // *it = Effects::procLFO(*it, n, params, sR);
         n++;
     }
 }
@@ -163,7 +163,7 @@ void Effects::modEcho(vector<double> & b, vector<double> params) {
     // double lfoAmp  = params[3];
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = Effects::procModEcho(b, *it, n, params, sR);
+        // *it = Effects::procModEcho(b, *it, n, params, sR);
         n++;
     }
 }
@@ -184,19 +184,19 @@ void Effects::echo(vector<double> & b, vector<double> params) {
     // double invDecay = 1.0 - decay;
     int n = 0;
     for(vector<double>::iterator it = begin(b); it != end(b); ++it){
-        *it = Effects::procEcho(b, *it, n, params, sR);
+        // *it = Effects::procEcho(b, *it, n, params, sR);
         n++;
     }
 }
 
-double Effects::procHPF(vector<double> & bT, double value, int accum, vector<double> params){
+double Effects::procHPF(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     if (accum >= 1) {
         value -= ((1.0 - params[0]) * bT[accum] +  params[0] * bT[accum-1]);
     }
     return value;
 }
 
-double Effects::procLPF(vector<double> & bT, double value, int accum, vector<double> params){
+double Effects::procLPF(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     if (accum >= 1) {
         value = (params[0] * bT[accum] + (1.0 - params[0]) * bT[accum-1]);
     }
@@ -207,9 +207,9 @@ void Effects::filter(vector<double> & b, vector<double> params, bool isHPF) {
     // double K = params[0];
     for (int i = 1; i < b.size(); i++) {
         if (isHPF == true) {
-            b[i] = Effects::procHPF(b, b[i], i, params);
+            // b[i] = Effects::procHPF(b, b[i], i, params);
         } else {
-            b[i] = Effects::procLPF(b, b[i], i, params);
+            // b[i] = Effects::procLPF(b, b[i], i, params);
         }
     }
 }
@@ -225,7 +225,7 @@ double Effects::getMinMax(vector<double> & bT) {
     return minmax;
 }
 
-double Effects::procCrush(double value, vector<double> params) {
+double Effects::procCrush(vector<double> & bT, double value, int accum, vector<double> params, int sR) {
     return (floor(value * params[0]))/params[0];
 }
 
@@ -233,11 +233,11 @@ double Effects::procCrush(double value, vector<double> params) {
 void Effects::crush(vector<double> & b, vector<double> params) {
     // int bitz = params[0];
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i = Effects::procCrush(*i, params);
+        // *i = Effects::procCrush(*i, params);
     }
 }
 
-double Effects::procWavefold(double value, vector<double> params) {
+double Effects::procWavefold(vector<double> & bT, double value, int accum, vector<double> params, int sR) {
     double uthresh = params[0];
     double lthresh = params[0] * -1;
     if (value > uthresh) {
@@ -255,11 +255,11 @@ double Effects::procWavefold(double value, vector<double> params) {
 // void Effects::wavefold(vector<double> & b,double L) {
 void Effects::wavefold(vector<double> & b, vector<double> params) {
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i = Effects::procWavefold(*i, params);
+        // *i = Effects::procWavefold(*i, params);
     }
 }
 
-double Effects::procHaas(vector<double> & bT, double value, int accum, vector<double> params){
+double Effects::procHaas(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     if (accum % 2 == 0 && accum < bT.size() - (params[0] + 1)) {
             value = bT[accum + int(params[0])];
     } else {
@@ -272,7 +272,7 @@ double Effects::procHaas(vector<double> & bT, double value, int accum, vector<do
 void Effects::haas(vector<double> & b, vector<double> params) { // aim for about 10ms = 441 samples a 44.1k
     // int interval = params[0];
     for (int i = 0; i < b.size(); i++) {
-        b[i] = Effects::procHaas(b, b[i], i, params);
+        // b[i] = Effects::procHaas(b, b[i], i, params);
     }
 }
 
@@ -284,7 +284,7 @@ void Effects::normalise(vector<double> & bT) {
     }
 }
 
-double Effects::procFuzz(double value, vector<double> params){
+double Effects::procFuzz(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     int sign = value / abs(value);
     sign = min(1, sign);
     sign = max(-1, sign);
@@ -304,7 +304,7 @@ void Effects::fuzz(vector<double> & b, vector<double> params) {
             pregain = abs(*i);
         }
 
-        *i = Effects::procFuzz(*i, params);
+        // *i = Effects::procFuzz(*i, params);
 
         if (abs(*i) > postgain) {
             postgain = abs(*i);
@@ -316,7 +316,7 @@ void Effects::fuzz(vector<double> & b, vector<double> params) {
     }
 }
 
-double Effects::procOverdrive(double value, vector<double> params){
+double Effects::procOverdrive(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double temp = value;
     if (abs(value) < params[0]){
         temp = 2 * value;
@@ -345,7 +345,7 @@ void Effects::overdrive(vector<double> & b, vector<double> params){
             pregain = abs(*it);
         }
 
-        *it = Effects::procOverdrive(*it, params);
+        // *it = Effects::procOverdrive(*it, params);
 
         if (abs(*it) > postgain) {
             postgain = abs(*it);
@@ -364,7 +364,7 @@ double Effects::mod(double n, double d) {
   return n;
 }
 
-double Effects::procDistort(double value, vector<double> params){
+double Effects::procDistort(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double temp = value;
     int mode = int(params[2]);
     switch (mode) {
@@ -393,6 +393,6 @@ void Effects::distort(vector<double> & b, vector<double> params){
     // double mix  = params[1];
     // int mode = params[2];
     for (vector <double>::iterator i = b.begin(); i!= b.end(); ++i) {
-        *i = Effects::procDistort(*i, params);
+        // *i = Effects::procDistort(*i, params);
     }
 }

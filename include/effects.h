@@ -35,17 +35,17 @@ class Effects {
         void overdrive(vector<double> & b, vector<double> params);
         void distort(vector<double> & b, vector<double> params);
 
-        double procLFO (double value, int accum, vector<double> params, int sR);
+        double procLFO(vector<double> & bT, double value, int accum, vector<double> params, int sR);
         double procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR);
         double procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR);
-        double procHPF(vector<double> & bT, double value, int accum, vector<double> params);
-        double procLPF(vector<double> & bT, double value, int accum, vector<double> params);
-        double procCrush(double value, vector<double> params);
-        double procWavefold(double value, vector<double> params);
-        double procHaas(vector<double> & bT, double value, int accum, vector<double> params);
-        double procFuzz(double value, vector<double> params);
-        double procOverdrive(double value, vector<double> params);
-        double procDistort(double value, vector<double> params);
+        double procHPF(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procLPF(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procCrush(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procWavefold(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procHaas(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procFuzz(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procOverdrive(vector<double> & bT, double value, int accum, vector<double> params, int sR);
+        double procDistort(vector<double> & bT, double value, int accum, vector<double> params, int sR);
         void printTimes();
     private:
         int sR;
