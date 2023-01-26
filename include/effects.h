@@ -23,6 +23,7 @@ class Effects {
         void normalise(vector<double> & bT);
         void addNoiseFloor(vector<double> & b, double range);
         double mod(double n, double d);
+        void doPreMath(vector< fx> & fxInstance);
 
         void LFO(vector<double> & b, vector<double> params);
         void modEcho(vector<double> & b, vector<double> params);
@@ -46,10 +47,6 @@ class Effects {
         double procFuzz(double value, vector<double> params);
         double procOverdrive(double value, vector<double> params);
         double procDistort(double value, vector<double> params);
-
-
-
-
 
 
         void printTimes();

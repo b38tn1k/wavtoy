@@ -4,8 +4,37 @@ Effects::Effects(int sampleRate){
     sR = sampleRate;
 }
 
+void Effects::doPreMath(vector< fx> & fxInstance) {
+    for (vector< fx>::iterator it = fxInstance.begin(); it != fxInstance.end(); ++it){
+                if (it->type.find("ECHO") != -1) {
+                    it->params.push_back(1.0 - it->params[0]);
+                    it->params.push_back(int(it->params[1] * sR));
+                } else if (it->type.find("LPF") != -1) {
+                } else if (it->type.find("HPF") != -1) {
+                } else if (it->type.find("FOLD") != -1) {
+                    it->params.push_back( -1 * it->params[0]);
+                    it->params.push_back(1.0 +  it->params[0]);
+                } else if (it->type.find("CRUSH") != -1) {
+                } else if (it->type.find("HAAS") != -1) {
+                } else if (it->type.find("FUZZ") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                } else if (it->type.find("MOD") != -1) {
+                    it->params.push_back (it->params[2] / sR);
+                    it->params.push_back (it->params[1] * sR);
+                    it->params.push_back (1.0 - it->params[0]);
+                } else if (it->type.find("LFO") != -1) {
+                } else if (it->type.find("OVD") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                } else if (it->type.find("DIST") != -1) {
+                    it->params.push_back (1.0 - it->params[1]);
+                }
+            }
+
+}
+
 void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int index){
     if (fxMap.find(index) != fxMap.end()){
+        doPreMath(fxMap[index]);
         for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
             auto start = high_resolution_clock::now();
             if (it->type.find("ECHO") != -1) { // can't switch on string :-<
@@ -85,9 +114,9 @@ void Effects::LFO(vector<double> & b, vector<double> params) {
 
 double Effects::procModEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
     double LFO = params[3] * sin( (TWO_PI * accum * params[2]) / sR );
-    int current = int(LFO * params[1] * sR);
+    int current = int(LFO * params[5]);
     if ((accum > current) && ((accum - current) < bT.size() )) {
-        value = (1.- params[0]) * (value) + params[0] * (bT[accum-current]);
+        value = (params[6]) * (value) + params[0] * (bT[accum-current]);
     }
     return value;
 
@@ -106,9 +135,9 @@ void Effects::modEcho(vector<double> & b, vector<double> params) {
 }
 
 double Effects::procEcho(vector<double> & bT, double value, int accum, vector<double> params, int sR){
-    if (accum > params[1] * sR) {
+    if (accum > params[3]) {
         if (bT[accum - params[1] * sR] != 0.0) {
-            value = (1.0 - params[0]) * (value) + params[0] * bT[accum - params[1] * sR];
+            value = (params[2]) * (value) + params[0] * bT[accum - params[3]];
         }
     }
     return value;
@@ -176,7 +205,7 @@ void Effects::crush(vector<double> & b, vector<double> params) {
 
 double Effects::procWavefold(double value, vector<double> params) {
     double uthresh = params[0];
-    double lthresh = params[0] * -1;
+    double lthresh = params[1];
     if (value > uthresh) {
             double delta = value - uthresh;
             value = uthresh - delta;
@@ -184,7 +213,7 @@ double Effects::procWavefold(double value, vector<double> params) {
             double delta = value - lthresh;
             value = lthresh - delta;
         }
-    value *= (1.0 + params[0]);
+    value *= (params[2]);
     return value;
 
 }
@@ -226,7 +255,7 @@ double Effects::procFuzz(double value, vector<double> params){
     sign = min(1, sign);
     sign = max(-1, sign);
     double fz = sign * (1 - exp (params[0] * sign * value));
-    value = ((1.0 - params[1]) * value) + params[1] *(fz);
+    value = ((params[2]) * value) + params[1] *(fz);
     return value;
 }
 
@@ -267,7 +296,7 @@ double Effects::procOverdrive(double value, vector<double> params){
             temp = -1 * (3 - (mv/3));
         }
     }
-    value = (1.0 - params[1]) * value + params[1] * temp;
+    value = (params[2]) * value + params[1] * temp;
     return value;
 }
 
@@ -320,7 +349,7 @@ double Effects::procDistort(double value, vector<double> params){
         default:
             break;
     }
-    value = (1.0 - params[1]) * value + params[1] * temp;
+    value = (params[3]) * value + params[1] * temp;
     return value;
 }
 
