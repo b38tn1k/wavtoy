@@ -146,6 +146,15 @@ int ScoreHandler::readHead(vector<string> lines){
             // hacky
             fxString[0] = fxIndex;
             fxStrings.push_back(fxString);
+            // new version
+            int index = instrumentStrings.size()-1;
+            string fxType = fxString[1];
+            vector <double> p;
+            for (vector <string>::iterator fxs = fxString.begin() + 2; fxs != fxString.end(); ++fxs){
+                p.push_back(stof(*fxs));
+            }
+            fxMap[index].push_back(fx(fxType, p));
+
         }
         if (string(*it).find("STRUCTURE") != -1) {
             structure = true;

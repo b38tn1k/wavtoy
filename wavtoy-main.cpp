@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <chrono>
 #include "include/frequencies.h"
 #include "include/wav_handler.h"
 #include "include/timeline.h"
@@ -17,8 +18,10 @@
 // I then thought that using pre-made skins was cheating so I killed a goat and skinned it. I then thought that that was cheating too, so I grew my own goat from a baby goat. I also think that is cheating but I'm not sure where to go from here. I haven't made any music lately, what with the goat farming and all.
 
 using namespace std;
+using namespace std::chrono;
 
 int main(int argc, char *argv[]){
+    auto startM = high_resolution_clock::now();
     if (argc < 2) {
         cout << "Specify input file" << endl;
         return 0;
@@ -31,7 +34,10 @@ int main(int argc, char *argv[]){
 
     cout << "Hello " << endl; 
     cout << score.bpm <<" BPM" << endl;
-    // make synths
+
+    
+
+    // MAKE SYNTHS - ~40 microseconds
     double maxDuration = 0;
     vector <Synth> instruments;
     for (vector < vector <string> >::iterator i = begin(score.instrumentStrings); i != end(score.instrumentStrings); ++i){
@@ -51,70 +57,46 @@ int main(int argc, char *argv[]){
             maxDuration = stof(temp[4]); 
         }
     }
+
+    
+
+    // DO BUFFER STUFF - 6.5 SECONDS
     vector<double> buffer;
     wav.openWav();
     seq.addBeats(buffer, ceil(score.length));
     seq.addSilence(buffer, maxDuration);
+    // 0.3 seconds from 6.5
 
     // write instruments to their own buffers
     for (vector<noteEvent>::iterator i = begin(score.score); i != end(score.score); ++i){
-        int index = seq.getSampleIndexFromCursor(4, i->beatIndex);
-        instruments[i->instrument].addNote(buffer, index, i->frequency);
+            
+        int index = seq.getSampleIndexFromCursor(4, i->beatIndex); // 0 microseconds
+        // auto start = high_resolution_clock::now();
+        instruments[i->instrument].addNote(buffer, index, i->frequency); // LONG ONE
+        // auto stop = high_resolution_clock::now();
+        // auto duration = duration_cast<microseconds>(stop - start);
+        // cout << "time: " << duration.count() << " microseconds" << endl;
     }
+    
+    // DO EFFECTS AND PRINT TO MASTER BUFFER - 12 SECONDS!
     int j = 0;
-    // apply effects to instrument buffers and write to master buffer
-    for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
-        vector <double> tempB = i->buffer;
-        for (vector < vector <string> >::iterator k = begin(score.fxStrings); k != end(score.fxStrings); ++k){
-            vector <string> tempFX = *k;
-            if (j == stoi(tempFX[0])){
-                if (tempFX[1].find("ECHO") != -1) { // can't switch on string :-<
-                    fx.echo(tempB, stof(tempFX[2]), stof(tempFX[3]));
-                }
-                if (tempFX[1].find("LPF") != -1) {
-                    fx.filter(tempB, stof(tempFX[2]));
-                }
-                if (tempFX[1].find("HPF") != -1) {
-                    fx.filter(tempB, stof(tempFX[2]), true);
-                }
-                if (tempFX[1].find("FOLD") != -1) {
-                    fx.wavefold(tempB, stof(tempFX[2]));
-                }
-                if (tempFX[1].find("CRUSH") != -1) {
-                    fx.crush(tempB, stof(tempFX[2]));
-                }
-                if (tempFX[1].find("MULT") != -1) {
-                    fx.mult(tempB, stof(tempFX[2]));
-                }
-                if (tempFX[1].find("HAAS") != -1) {
-                    fx.haas(tempB, stoi(tempFX[2]));
-                }
-                if (tempFX[1].find("FUZZ") != -1) {
-                    fx.fuzz(tempB, stof(tempFX[2]), stof(tempFX[3]));
-                }
-                if (tempFX[1].find("MOD") != -1) {
-                    fx.modEcho(tempB, stof(tempFX[2]), stof(tempFX[3]), stof(tempFX[4]), stof(tempFX[5]));
-                }
-                if (tempFX[1].find("LFO") != -1) {
-                    fx.LFO(tempB, stof(tempFX[2]), stof(tempFX[3]));
-                }
-                if (tempFX[1].find("OVD") != -1) {
-                    fx.overdrive(tempB, stof(tempFX[2]), stof(tempFX[3]));
-                }
-                if (tempFX[1].find("DIST") != -1) {
-                    fx.distort(tempB, stof(tempFX[2]), stof(tempFX[3]), stof(tempFX[4]));
-                }
-            }
-        }
+    for (vector <Synth>::iterator it = begin(instruments); it!= end(instruments); ++it){
+        fx.applyFX(it->buffer, score.fxMap, j); // LONG ONE!
         j++;
-        for (int i = 0; i < tempB.size(); i++) {
-            buffer[i] += double(tempB[i]);
+        for (int i = 0; i < it->buffer.size(); i++) {
+            buffer[i] += double(it->buffer[i]);
         }
     }
-    fx.normalise(buffer);
-    fx.addNoiseFloor(buffer, 0.001);
-    wav.writeBuffer(buffer);
-    wav.closeWav();
+    
+    fx.normalise(buffer);  // LONG ONE!
+    // fx.addNoiseFloor(buffer, 0.001);  // LONG ONE!
+    wav.writeBuffer(buffer);  // LONG ONE!
+    
+    wav.closeWav(); 
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
+    auto stopM = high_resolution_clock::now();
+    auto durationM = duration_cast<microseconds>(stopM - startM);
+    cout << "Processing Time: " << durationM.count() << " microseconds" << endl;
+    fx.printTimes();
     return 0;
 }

@@ -54,7 +54,7 @@ double Synth::additiveOsc(int n, double frequency) {
 }
 
 double Synth::noiseOsc(int n, double frequency) {
-    double random = (rand() % 100)/100.0;
+    double random = (rand() % 100)/50.0 - 1.0;
     double value = fundamentalGain * sinSample(n, frequency, sampleRate);
     value = (fundamentalGain * value) + (1 - fundamentalGain) * random;
     return value;

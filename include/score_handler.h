@@ -26,6 +26,12 @@ struct seq {
     seq () {}
 };
 
+struct fx {
+    string type;
+    vector <double> params;
+    fx (string t, vector <double> p) : type(t), params(p) {}
+};
+
 class ScoreHandler {
     public:
         ScoreHandler(string filename); // loading
@@ -34,6 +40,7 @@ class ScoreHandler {
         double bpm;
         vector < vector <string> > instrumentStrings;
         vector < vector <string> > fxStrings;
+        map <int, vector< fx> > fxMap;
         vector < vector <string> > scoreStrings;
         vector < vector <string> > structureStrings;
         vector < noteEvent > score;
