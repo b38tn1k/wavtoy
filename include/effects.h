@@ -8,10 +8,12 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <chrono>
 #include <map>
 #include "score_handler.h"
 
 using namespace std;
+using namespace std::chrono;
 
 class Effects {
     public:
@@ -21,6 +23,8 @@ class Effects {
         double mod(double n, double d);
         double getMinMax(vector<double> & bT);
         void normalise(vector<double> & bT);
+        void printTimes();
+        void compress(vector<double> & bT, double thresh, double ratio);
 
         void LFO(vector<double> & b, vector<double> params);
         void modEcho(vector<double> & b, vector<double> params);
@@ -35,6 +39,7 @@ class Effects {
 
     private:
         int sR;
+        map <string, vector <int> > timers;
 
 };
 #endif

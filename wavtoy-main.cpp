@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <chrono>
 #include "include/frequencies.h"
 #include "include/wav_handler.h"
 #include "include/timeline.h"
@@ -17,8 +18,10 @@
 // I then thought that using pre-made skins was cheating so I killed a goat and skinned it. I then thought that that was cheating too, so I grew my own goat from a baby goat. I also think that is cheating but I'm not sure where to go from here. I haven't made any music lately, what with the goat farming and all.
 
 using namespace std;
+using namespace std::chrono;
 
 int main(int argc, char *argv[]){
+    auto startM = high_resolution_clock::now();
     if (argc < 2) {
         cout << "Specify input file" << endl;
         return 0;
@@ -56,25 +59,39 @@ int main(int argc, char *argv[]){
     seq.addBeats(buffer, ceil(score.length));
     seq.addSilence(buffer, maxDuration);
 
+    auto start = high_resolution_clock::now();
     // write instruments to their own buffers
     for (vector<noteEvent>::iterator i = begin(score.score); i != end(score.score); ++i){
         int index = seq.getSampleIndexFromCursor(4, i->beatIndex);
-        instruments[i->instrument].addNote(buffer, index, i->frequency);
+        instruments[i->instrument].addNote(buffer.size(), index, i->frequency);
     }
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Synth Write: " << duration.count()/1000000.0 << " sec" << endl;
     int j = 0;
     // apply effects to instrument buffers and write to master buffer
+    
     for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
-        vector <double> tempB = i->buffer;
-        fx.applyFX(tempB, score.fxMap, j);
+        start = high_resolution_clock::now();
+        fx.applyFX(i->buffer, score.fxMap, j);
         j++;
-        for (int i = 0; i < tempB.size(); i++) {
-            buffer[i] += double(tempB[i]);
+        stop = high_resolution_clock::now();
+        duration = duration_cast<microseconds>(stop - start);
+        cout << "FX: " << duration.count()/1000000.0 << " sec" << endl;
+        for (int j = 0; j < i->buffer.size(); j++) {
+            buffer[j] += i->buffer[j];
         }
     }
+    
     fx.normalise(buffer);
-    fx.addNoiseFloor(buffer, 0.001);
+    fx.compress(buffer, 0.5, 0.5);
+    // fx.addNoiseFloor(buffer, 0.0001);
     wav.writeBuffer(buffer);
     wav.closeWav();
+    auto stopM = high_resolution_clock::now();
+    auto durationM = duration_cast<microseconds>(stopM - startM);
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
+    cout << "IN " << durationM.count()/1000000.0 << " sec" << endl;
+    fx.printTimes();
     return 0;
 }

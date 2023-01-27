@@ -2,6 +2,7 @@
 
 Synth::Synth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC, int m) {
     mode = m;
+    buffer.push_back(0.0); //just to put something there 
     attack = a;
     decay = d;
     amplitude = amp;
@@ -40,35 +41,55 @@ void Synth::setTimbre(double fG, double hB, int hC){
 }
 
 double Synth::additiveOsc(int n, double frequency) {
-    double value = fundamentalGain * sinSample(n, frequency, sampleRate);
-    for (int i = 1; i < harmonicCount; i++) {
-        double harmGain = (harmonicCount - i)/((double)harmonicCount * 2) * (1.0-fundamentalGain);
-        if (i % 2 == 0) {
-            harmGain *= harmonicBalance;
-        } else {
-            harmGain *= (1.0 - harmonicBalance);
+    double value;
+    if (n%2 == 1) {
+        value = prevAdd;
+    } else {
+        value = fundamentalGain * sinSample(n, frequency, sampleRate);
+        if (harmonicCount > 0){
+            for (int i = 1; i < harmonicCount; i++) {
+                double harmGain = (harmonicCount - i)/((double)harmonicCount * 2) * (1.0-fundamentalGain);
+                if (i % 2 == 0) {
+                    harmGain *= harmonicBalance;
+                } else {
+                    harmGain *= (1.0 - harmonicBalance);
+                }
+                value += harmGain * sinSample(n, frequency * i, sampleRate);
+            }
         }
-        value += harmGain * sinSample(n, frequency * i, sampleRate);
+        prevAdd = value;
     }
     return value;
 }
 
 double Synth::noiseOsc(int n, double frequency) {
-    double random = (rand() % 100)/100.0;
-    double value = fundamentalGain * sinSample(n, frequency, sampleRate);
-    value = (fundamentalGain * value) + (1 - fundamentalGain) * random;
+    double value;
+    if (n%2 == 1) {
+        value = prevRando;
+    } else {
+        prevRando = (rand() % 100)/50.0 - 1.0;
+        value = fundamentalGain * sinSample(n, frequency, sampleRate);
+        value = (fundamentalGain * value) + (1 - fundamentalGain) * prevRando;
+    }
+    
     return value;
 }
 
 double Synth::swoopOsc(int n, double frequency) {
-    double mult = 1.0;
-    double pitch = frequency;
-    double random = (rand() % 100)/100.0;
-    if (n <= attackInSamples/2) {
-        mult -= attackIncrement * n;
-        pitch  = (harmonicCount * frequency * mult);
+    double value;
+    if (n%2 == 1) {
+        value = prevSwoop;
+    } else {
+        double mult = 1.0;
+        double pitch = frequency;
+        double random = (rand() % 100)/100.0;
+        if (n <= attackInSamples/2) {
+            mult -= attackIncrement * n;
+            pitch  = (harmonicCount * frequency * mult);
+        }
+        value = fundamentalGain * (sinSample(n, pitch, sampleRate) + harmonicBalance * random);
+        prevSwoop = value;
     }
-    double value = fundamentalGain * (sinSample(n, pitch, sampleRate) + harmonicBalance * random);
     return value;
 }
 
@@ -112,10 +133,11 @@ vector <double> Synth::synthesise(double frequency){
     return tempBuffer;
 }
 
-void Synth::addNote(vector<double> & b, int index, double frequency){
+void Synth::addNote(int bs, int index, double frequency){
     vector <double> tempBuffer = synthesise(frequency);
-    while(buffer.size() < b.size()) {
-        buffer.push_back(0);
+    if(buffer.size() < bs) {
+        vector <double> nb(bs, 0.0);
+        buffer = nb;
     }
     // assume note fits
     // sum note into buffer;
