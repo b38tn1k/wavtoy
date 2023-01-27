@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <chrono>
 #include "include/frequencies.h"
 #include "include/wav_handler.h"
 #include "include/timeline.h"
@@ -18,10 +17,8 @@
 // I then thought that using pre-made skins was cheating so I killed a goat and skinned it. I then thought that that was cheating too, so I grew my own goat from a baby goat. I also think that is cheating but I'm not sure where to go from here. I haven't made any music lately, what with the goat farming and all.
 
 using namespace std;
-using namespace std::chrono;
 
 int main(int argc, char *argv[]){
-    auto startM = high_resolution_clock::now();
     if (argc < 2) {
         cout << "Specify input file" << endl;
         return 0;
@@ -34,10 +31,7 @@ int main(int argc, char *argv[]){
 
     cout << "Hello " << endl; 
     cout << score.bpm <<" BPM" << endl;
-
-    
-
-    // MAKE SYNTHS - ~40 microseconds
+    // make synths
     double maxDuration = 0;
     vector <Synth> instruments;
     for (vector < vector <string> >::iterator i = begin(score.instrumentStrings); i != end(score.instrumentStrings); ++i){
@@ -57,46 +51,30 @@ int main(int argc, char *argv[]){
             maxDuration = stof(temp[4]); 
         }
     }
-
-    
-
-    // DO BUFFER STUFF - 6.5 SECONDS
     vector<double> buffer;
     wav.openWav();
     seq.addBeats(buffer, ceil(score.length));
     seq.addSilence(buffer, maxDuration);
-    // 0.3 seconds from 6.5
 
     // write instruments to their own buffers
     for (vector<noteEvent>::iterator i = begin(score.score); i != end(score.score); ++i){
-            
-        int index = seq.getSampleIndexFromCursor(4, i->beatIndex); // 0 microseconds
-        // auto start = high_resolution_clock::now();
-        instruments[i->instrument].addNote(buffer, index, i->frequency); // LONG ONE
-        // auto stop = high_resolution_clock::now();
-        // auto duration = duration_cast<microseconds>(stop - start);
-        // cout << "time: " << duration.count() << " microseconds" << endl;
+        int index = seq.getSampleIndexFromCursor(4, i->beatIndex);
+        instruments[i->instrument].addNote(buffer, index, i->frequency);
     }
-    
-    // DO EFFECTS AND PRINT TO MASTER BUFFER - 12 SECONDS!
     int j = 0;
-    for (vector <Synth>::iterator it = begin(instruments); it!= end(instruments); ++it){
-        fx.applyFX(it->buffer, score.fxMap, j); // LONG ONE!
+    // apply effects to instrument buffers and write to master buffer
+    for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
+        vector <double> tempB = i->buffer;
+        fx.applyFX(tempB, score.fxMap, j);
         j++;
-        for (int i = 0; i < it->buffer.size(); i++) {
-            buffer[i] += double(it->buffer[i]);
+        for (int i = 0; i < tempB.size(); i++) {
+            buffer[i] += double(tempB[i]);
         }
     }
-    
-    fx.normalise(buffer);  // LONG ONE!
-    // fx.addNoiseFloor(buffer, 0.001);  // LONG ONE!
-    wav.writeBuffer(buffer);  // LONG ONE!
-    
-    wav.closeWav(); 
+    fx.normalise(buffer);
+    fx.addNoiseFloor(buffer, 0.001);
+    wav.writeBuffer(buffer);
+    wav.closeWav();
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
-    auto stopM = high_resolution_clock::now();
-    auto durationM = duration_cast<microseconds>(stopM - startM);
-    cout << "Processing Time: " << durationM.count()/1000000.0 << " seconds" << endl;
-    fx.printTimes();
     return 0;
 }
