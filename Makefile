@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS1 = -Wall -g 
+CFLAGS1 = -std=c++11 -Wall -g 
 TARGET1 = wavtoy
 TARGET2 = wavtoy-composer 
 OBJS1 = include/frequencies.h wav_handler.o timeline.o synth.o score_handler.o effects.o

@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <chrono>
+#include <thread>
 #include "include/frequencies.h"
 #include "include/wav_handler.h"
 #include "include/timeline.h"
@@ -69,19 +70,33 @@ int main(int argc, char *argv[]){
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "Synth Write: " << duration.count()/1000000.0 << " sec" << endl;
     int j = 0;
-    // apply effects to instrument buffers and write to master buffer
-    
+    // apply effects to instrument buffers 
+    start = high_resolution_clock::now();
+    vector <thread> thvec;
     for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
-        start = high_resolution_clock::now();
-        fx.applyFX(i->buffer, score.fxMap, j);
+        function <void()> op = [& fx, i, score, j](){
+            fx.applyFX(i->buffer, score.fxMap, j);
+        };
         j++;
-        stop = high_resolution_clock::now();
-        duration = duration_cast<microseconds>(stop - start);
-        cout << "FX: " << duration.count()/1000000.0 << " sec" << endl;
+        thread th(op);
+        thvec.push_back(move(th));
+    }
+    for (auto & th : thvec) {
+        th.join();
+    }
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "FX WRITE: " << duration.count()/1000000.0 << " sec" << endl;
+    // write to master buffer
+    start = high_resolution_clock::now();
+    for (vector <Synth>::iterator i = begin(instruments); i!= end(instruments); ++i){
         for (int j = 0; j < i->buffer.size(); j++) {
             buffer[j] += i->buffer[j];
         }
     }
+    stop = high_resolution_clock::now();
+    duration = duration_cast<microseconds>(stop - start);
+    cout << "MASTER WRITE: " << duration.count()/1000000.0 << " sec" << endl;
     
     fx.normalise(buffer);
     fx.compress(buffer, 0.5, 0.5);
@@ -92,6 +107,6 @@ int main(int argc, char *argv[]){
     auto durationM = duration_cast<microseconds>(stopM - startM);
     cout << "RENDERED: \t"<< score.title <<".wav" << endl;
     cout << "IN " << durationM.count()/1000000.0 << " sec" << endl;
-    fx.printTimes();
+    // fx.printTimes();
     return 0;
 }

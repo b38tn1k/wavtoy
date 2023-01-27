@@ -7,7 +7,7 @@ Effects::Effects(int sampleRate){
 void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int index){
     if (fxMap.find(index) != fxMap.end()){
         for (vector< fx>::iterator it = fxMap[index].begin(); it != fxMap[index].end(); ++it){
-            auto start = high_resolution_clock::now();
+            // auto start = high_resolution_clock::now();
             if (it->type.find("ECHO") != -1) { // can't switch on string :-<
                 echo(bT, it->params);
             }
@@ -41,9 +41,9 @@ void Effects::applyFX(vector<double> & bT, map <int, vector< fx> > fxMap, int in
             if (it->type.find("DIST") != -1) {
                 distort(bT, it->params);
             }
-            auto stop = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds>(stop - start);
-            timers[it->type].push_back(int(duration.count()));
+            // auto stop = high_resolution_clock::now();
+            // auto duration = duration_cast<microseconds>(stop - start);
+            // timers[it->type].push_back(int(duration.count()));
         }
     }
 }
