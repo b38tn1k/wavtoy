@@ -14,6 +14,7 @@ class Timeline {
         void addSilence(vector<double> & b, double dur);
         int getSampleIndexFromCursor(u_int beatSubDivision, double multiples);
         int cursor;
+        int beatInSamples;
         Timeline(int sR) {
             sampleRate = sR;
             cursor = 0;
@@ -24,7 +25,6 @@ class Timeline {
         int beatsInMeasure;
         int sampleRate;
         double bpm;
-        int beatInSamples;
         int measureInSamples;
 
 };

@@ -44,6 +44,7 @@ class ScoreHandler {
         vector < vector <string> > scoreStrings;
         vector < vector <string> > structureStrings;
         vector < noteEvent > score;
+        vector < vector < noteEvent > > instrumentScore;
         map <string, int> notes;
         double length;
     private:

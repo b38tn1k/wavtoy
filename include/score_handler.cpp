@@ -67,6 +67,12 @@ void ScoreHandler::buildScore() {
         }
         sIndex += maxSeqLength;
     }
+    
+    vector < vector < noteEvent > > iS(instrumentStrings.size());
+    for (vector < noteEvent > :: iterator it = tempScore.begin(); it != tempScore.end(); it++){
+        iS[it->instrument].push_back(*it);
+    }
+    instrumentScore = iS;
     score = tempScore;
     length = sIndex;
 }

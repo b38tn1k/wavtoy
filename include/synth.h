@@ -14,6 +14,7 @@ using namespace std;
 class Synth {
     public:
         Synth(double a, double d, double amp, double dur, int sR, double fG, double hB, int hC, int m);
+        Synth(vector<string> params, int sR);
         void addNote(int bs, int index, double frequency);
         vector <double> synthesise(double frequency);
         void setTimbre(double fG, double hB, int hC);

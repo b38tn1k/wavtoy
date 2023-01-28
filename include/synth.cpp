@@ -8,6 +8,10 @@ Synth::Synth(double a, double d, double amp, double dur, int sR, double fG, doub
     amplitude = amp;
     duration = dur;
     sampleRate = sR;
+    fundamentalGain = fG;
+    harmonicBalance = hB;
+    harmonicCount = hC;
+     // can this be an init type dealy?
     attackInSamples = duration * attack * sR;
     attackIncrement = 1.0/attackInSamples;
     if (attack == 0) {
@@ -25,9 +29,46 @@ Synth::Synth(double a, double d, double amp, double dur, int sR, double fG, doub
         decayIncrement = 0.0;
         decayInSamples = (duration * sR);
     }
-    fundamentalGain = fG;
-    harmonicBalance = hB;
-    harmonicCount = hC;
+    
+}
+
+Synth::Synth(vector<string> params, int sR){
+    mode = 1;
+    if (params[0].find("SYNTH") != -1) {
+        mode = 1;
+    }
+    if (params[0].find("KICK") != -1) {
+        mode = 3;
+    }
+    if (params[0].find("NOISE") != -1) {
+        mode = 2;
+    }
+    attack = stof(params[1]);
+    decay = stof(params[2]);
+    amplitude = stof(params[3]);
+    duration = stof(params[4]);
+    sampleRate = sR;
+    fundamentalGain = stof(params[5]);
+    harmonicBalance = stof(params[6]);
+    harmonicCount = stoi(params[7]);
+    // can this be an init type dealy?
+    attackInSamples = duration * attack * sR;
+    attackIncrement = 1.0/attackInSamples;
+    if (attack == 0) {
+        attackIncrement = 1.0;
+        attackInSamples = 0;
+    }
+    decayInSamples = duration * decay * sR;
+    decayIncrement = 1.0/decayInSamples;
+    decayInSamples = (duration * sR) - decayInSamples;
+    if (attack == 0) {
+        attackIncrement = 1.0;
+        attackInSamples = 0;
+    }
+    if (decay == 0) {
+        decayIncrement = 0.0;
+        decayInSamples = (duration * sR);
+    }
 }
 
 double sinSample(int n, double f, int sR){
